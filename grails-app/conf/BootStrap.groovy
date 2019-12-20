@@ -1,24 +1,18 @@
 import com.carobar.Role
-import com.carobar.User
-import com.carobar.UserRole
+import constants.RoleConstant
+import groovy.util.logging.Slf4j
 
+@Slf4j
 class BootStrap {
 
     def init = { servletContext ->
-
-
-        if (!Role.findByAuthority('Buyer_ROLE'))
-        {
-            Role role=new Role(authority: 'Buyer_ROLE')
-            role.save(flush: true,failOnError: true)
-
+        if (!Role.count()) {
+            log.info("... init roles")
+            List<Role> roleList = []
+            roleList << new Role(authority: RoleConstant.ROLE_BUYER)
+            roleList << new Role(authority: RoleConstant.ROLE_SELLER)
+            roleList*.save(flush: true, failOnError: true)
         }
-        if(!Role.findByAuthority('Seller_Role'))
-        {
-            Role role=new Role(authority: 'Seller_Role')
-            role.save(flush: true,failOnError: true)
-        }
-
     }
     def destroy = {
     }
