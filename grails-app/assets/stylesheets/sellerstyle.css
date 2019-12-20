@@ -1,0 +1,35 @@
+.panel-body{
+
+    height: auto;
+
+
+}
+.panel-body input[type='file']{
+
+    margin-left: 100px;
+}
+.panel-body input[type='text'],input[type='radio']{
+
+    margin-left: 100px;
+}
+input[type="submit"]{
+    margin-left: 70px;
+    height: 50px;
+    width: 100px;
+    border: 1px solid #CCCCCC;
+    border-radius:0px;
+    background-color: #39afff;
+    color: white;
+    margin-top: 10px;
+
+
+}
+input[type="submit"]:hover{
+    box-shadow: 1px 3px 10px 2px #CCCCCC;
+}
+.panel-heading:after{
+    font-family: "Glyphicons Halflings";
+    content: "\e114";
+    float: right;
+
+}
