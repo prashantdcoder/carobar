@@ -28,7 +28,6 @@ class HomeController {
 
     @Secured("IS_AUTHENTICATED_FULLY")
     def index() {
-
         User user=springSecurityService.getCurrentUser()
         def sellercar=Car.findAllByUser(user)
         if(SpringSecurityUtils.ifAllGranted("Admin_Role1")) {
@@ -37,9 +36,7 @@ class HomeController {
             [carList: carList, carsCount: carList.totalCount, params: params]
         }
         else if(SpringSecurityUtils.ifAllGranted("Seller_Role")){
-
             render(view: 'car',model: [sellercar: sellercar])
-
         }
         else {
             redirect(controller: 'home',action: 'search')
