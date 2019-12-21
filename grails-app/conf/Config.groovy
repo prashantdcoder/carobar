@@ -11,7 +11,7 @@
 //    grails.config.locations << "file:" + System.properties["${appName}.config.location"]
 // }
 
-imagePath = "/home/prashantk/Documents/carobarimages/"
+imagePath = "/home/Prashant/Documents/carobar/"
 range1="1Lac-5Lac"
 range2="5Lac-10Lac"
 range3="10Lac-15Lac"

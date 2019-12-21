@@ -2,6 +2,7 @@ package com.carobar
 
 import carvo.CarVo
 import commandObject.*
+import constants.RoleConstant
 import grails.converters.JSON
 import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.plugin.springsecurity.annotation.Secured
@@ -11,19 +12,22 @@ import java.awt.image.BufferedImage
 
 class HomeController {
     def id = 0
-    def carService;
+
+    def carService
+
     def springSecurityService
 
     @Secured("IS_AUTHENTICATED_FULLY")
     def index() {
+        List<Car> carList = []
         User user = springSecurityService.getCurrentUser()
-        def sellercar = Car.findAllByUser(user)
-        if (SpringSecurityUtils.ifAllGranted("Admin_Role1")) {
+        if (SpringSecurityUtils.ifAllGranted(RoleConstant.ROLE_ADMIN)) {
             def c = Car.createCriteria()
-            def carList = c.list(max: params.max ?: 5, offset: params.offset ?: 0) {}
+            carList = c.list(max: params.max ?: 5, offset: params.offset ?: 0) {} as List<Car>
             [carList: carList, carsCount: carList.totalCount, params: params]
-        } else if (SpringSecurityUtils.ifAllGranted("Seller_Role")) {
-            render(view: 'car', model: [sellercar: sellercar])
+        } else if (SpringSecurityUtils.ifAllGranted(RoleConstant.ROLE_SELLER)) {
+            carList = Car.findAllByUser(user)
+            render(view: 'car', model: [sellercar: carList])
         } else {
             redirect(controller: 'home', action: 'search')
         }
@@ -34,7 +38,7 @@ class HomeController {
         render("User index action")
     }
 
-    @Secured('hasRole("Admin_Role1")')
+    @Secured('hasRole("ROLE_ADMIN")')
     def insert(CarCommand carCommand) {
 
         def carcompany = carCommand.carCompany.getValue().toString()
@@ -70,9 +74,9 @@ class HomeController {
         String ext = carService.showImage(image)
         File imageFile = new File(profileImagePath + "/" + image)
         BufferedImage originalImage = ImageIO.read(imageFile)
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ImageIO.write(originalImage, ext, baos);
-        byte[] imageInByte = baos.toByteArray();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream()
+        ImageIO.write(originalImage, ext, baos)
+        byte[] imageInByte = baos.toByteArray()
         response.setHeader('Content-length', imageInByte.length.toString())
         response.contentType = 'image/jpg'
         response.outputStream << imageInByte
@@ -133,7 +137,7 @@ class HomeController {
     def listingOfCars(CarSearchCO carSearchCO) {
 
         List<Car> carList = null
-        carList = carService.listingsOfCars(carSearchCO);
+        carList = carService.listingsOfCars(carSearchCO)
         render template: 'listingOfCars', model: [carList: carList]
 
     }
@@ -149,8 +153,8 @@ class HomeController {
         } else {
 
 
-            viewCount = new ViewCount(user: user, car: car);
-            viewCount.save(flush: true, failOnError: true);
+            viewCount = new ViewCount(user: user, car: car)
+            viewCount.save(flush: true, failOnError: true)
         }
 
         CarBasics carBasics = CarBasics.findByCar(car)
@@ -160,11 +164,11 @@ class HomeController {
         CarSafety carSafety = CarSafety.findByCar(car)
 
 
-        Picture.findAllByCar(Car.findByCarNumber(car.carNumber));
+        Picture.findAllByCar(Car.findByCarNumber(car.carNumber))
 
         String profileImagePath = "${grailsApplication.config.imagePath}/${params.carNumber}"
         File imageFile = new File(profileImagePath + "/")
-        def imageArray = [];
+        def imageArray = []
 
         imageFile.list().each {
 
@@ -172,10 +176,10 @@ class HomeController {
             File fullpath = new File(profileImagePath + "/" + it)
             def ext = carService.showImage(it)
             BufferedImage originalImage = ImageIO.read(fullpath)
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ImageIO.write(originalImage, ext, baos);
-            byte[] imageInByte = baos.toByteArray();
-            imageArray.add("data:image/" + ext + ";base64," + imageInByte.encodeBase64().toString())
+            ByteArrayOutputStream baos = new ByteArrayOutputStream()
+            ImageIO.write(originalImage, ext, baos)
+            byte[] imageInByte = baos.toByteArray()
+            imageArray.add("data:image/" + ext + "base64," + imageInByte.encodeBase64().toString())
         }
 
 
@@ -196,9 +200,9 @@ class HomeController {
             File fullpath = new File(profileImagePath + "/" + it)
             def ext = carService.showImage(it)
             BufferedImage originalImage = ImageIO.read(fullpath)
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ImageIO.write(originalImage, ext, baos);
-            byte[] imageInByte = baos.toByteArray();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream()
+            ImageIO.write(originalImage, ext, baos)
+            byte[] imageInByte = baos.toByteArray()
             response.setHeader('Content-length', imageInByte.length.toString())
             response.contentType = 'image/jpg'
             response.outputStream << imageInByte
@@ -383,7 +387,7 @@ class HomeController {
         Car car = Car.findById(params.carId)
         String result = carService.addToWishlist(user, car)
 
-        render result;
+        render result
     }
 
     def countWishlist() {
@@ -417,7 +421,7 @@ class HomeController {
     }
 
     def compareCar() {
-        String carId = "";
+        String carId = ""
         carId = params.id
         List<Car> carList = carService.compareCar(carId)
 
@@ -447,7 +451,7 @@ class HomeController {
 
         String carid = params.carId
         Integer count = carService.viewCount(carid)
-        def responseData = [:];
+        def responseData = [:]
         responseData["carId"] = params.carId
         responseData["count"] = count
         render responseData as JSON
@@ -455,17 +459,17 @@ class HomeController {
 
     def message(MessageCommand messageCommand) {
 
-        ThreadMessage threadMessage = null;
+        ThreadMessage threadMessage = null
         User user = springSecurityService.getCurrentUser()
         if (SpringSecurityUtils.ifAllGranted("Buyer_ROLE")) {
 
-            String receiver = messageCommand.sender;
+            String receiver = messageCommand.sender
             String sender = user.getUsername()
             String message = messageCommand.message
 
             User senderId = User.findByUsername(sender)
             User receiverId = User.findByUsername(receiver)
-            List<Message> message1 = null;
+            List<Message> message1 = null
             messageCommand.validate()
 
             if (messageCommand.hasErrors()) {
@@ -538,13 +542,13 @@ class HomeController {
 
     def feedback(FeedbackCommand feedbackCommand) {
         User user = springSecurityService.getCurrentUser()
-        if (SpringSecurityUtils.ifAllGranted("Admin_Role1")) {
+        if (SpringSecurityUtils.ifAllGranted(RoleConstant.ROLE_ADMIN)) {
             List<Feedback> feedbackList = Feedback.createCriteria().list(max: params.max ?: 5, offset: params.offset ?: 0) {
                 order("date", "desc")
             }
             render(view: 'feedback', model: [feedbackList: feedbackList, feedbackCount: feedbackList.totalCount, params: params])
         } else {
-            feedbackCommand.validate();
+            feedbackCommand.validate()
             if (feedbackCommand.hasErrors()) {
 
                 render(view: 'feedback', model: [feedbackCommand: feedbackCommand])
