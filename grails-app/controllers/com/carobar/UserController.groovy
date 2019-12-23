@@ -7,135 +7,126 @@ import grails.transaction.Transactional
 import grails.plugin.asyncmail.*
 
 
-
-
 import commandObject.UserCommand
+
 @Transactional(readOnly = false)
-//@Secured('hasRole("ROLE_ADMIN")')
 class UserController {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
-    SpringSecurityService  springSecurityService
+    SpringSecurityService springSecurityService
     AsynchronousMailService asynchronousMailService
     def groovyPageRenderer
     def grailsLinkGenerator
     def userService
+
     @Secured(['IS_AUTHENTICATED_ANONYMOUSLY'])
-    def register(){
+    def register() {
 
     }
 
-@Secured(['IS_AUTHENTICATED_ANONYMOUSLY'])
-    def user_details(UserCommand userCommand){
+    @Secured(['IS_AUTHENTICATED_ANONYMOUSLY'])
+    def user_details(UserCommand userCommand) {
 
-    def user=new User(params)
-    def userName=params.get('username')
-    def role=params.list('role')
-    def email=params.get('email')
+        def user = new User(params)
+        def userName = params.get('username')
+        def role = params.list('role')
+        def email = params.get('email')
 
 
-    userCommand.validate()
+        userCommand.validate()
 
-        if(userCommand.hasErrors())
-        {
+        if (userCommand.hasErrors()) {
             userCommand.errors.allErrors.each { log.debug "error while savig register" + it }
             render(view: 'register', model: [userCommand: userCommand])
+        } else {
+            userService.user_details(userName, role, email, user)
+
+            flash.message = "Verify email to activate your account"
+            render(view: 'register')
+
+            return
         }
 
-    else
-    {
-        userService.user_details(userName,role,email,user)
-
-        flash.message="Verify email to activate your account"
-        render(view: 'register')
-
-        return
     }
 
-  }
+    def verifyEmailId() {
 
-    def verifyEmailId(){
-
-        User user=User.findById(params.id)
-        user.enabled=true
-        user.save(flush: true,failOnError: true)
+        User user = User.findById(params.id)
+        user.enabled = true
+        user.save(flush: true, failOnError: true)
         redirect(controller: 'home')
         return
     }
 
 
     @Secured("IS_AUTHENTICATED_FULLY")
-    def login(){
+    def login() {
         def user = springSecurityService.currentUserId
 
 
-        redirect controller: 'home' ,action: 'index'
+        redirect controller: 'home', action: 'index'
 
     }
+
     def index(Integer max) {
 
     }
 
-    def forgotPassowrd(){
+    def forgotPassowrd() {
         render(view: 'forgotPassword')
     }
-    def confirmEmail(params){
-        def email=params.email
 
-        User user=User.findByEmail(email)
+    def confirmEmail(params) {
+        def email = params.email
 
-        if(user){
+        User user = User.findByEmail(email)
+
+        if (user) {
 
             userService.confirmEmail(user)
-            flash.message="Your password reset mail has been sent-check your email"
-        }
-        else {
-            flash.message="Invalid email address"
+            flash.message = "Your password reset mail has been sent-check your email"
+        } else {
+            flash.message = "Invalid email address"
         }
 
         render(view: 'forgotPassword')
     }
 
-    def updatePassword(){
+    def updatePassword() {
 
-        User user=User.findByUuid(params.id)
+        User user = User.findByUuid(params.id)
 
-        if(user)
-        {
-            render(view: 'updatePassword',model: [user: user])
-        }
-        else
-        {
-            flash.message="not valid user"
+        if (user) {
+            render(view: 'updatePassword', model: [user: user])
+        } else {
+            flash.message = "not valid user"
             render view: 'updatePassword'
         }
     }
 
-    def changePassword(){
+    def changePassword() {
 
-        User user=User.findByUuid(params.uuid)
-        user.password=params.newPassword
-        user.save(flush: true,failOnError: true)
+        User user = User.findByUuid(params.uuid)
+        user.password = params.newPassword
+        user.save(flush: true, failOnError: true)
         render(view: 'register')
         redirect(controller: 'home')
 
     }
 
-    def checkAvailability(){
+    def checkAvailability() {
 
-        String username=params.username
-        String msg=null
-        User user=User.findByUsername(username);
+        String username = params.username
+        String msg = null
+        User user = User.findByUsername(username);
 
-        if(user){
-            msg="exist"
-        }
-        else {
-            msg="notexist"
+        if (user) {
+            msg = "exist"
+        } else {
+            msg = "notexist"
         }
         render msg
     }
-
 
 
     def show(User userInstance) {
@@ -154,11 +145,11 @@ class UserController {
         }
 
         if (userInstance.hasErrors()) {
-            respond userInstance.errors, view:'create'
+            respond userInstance.errors, view: 'create'
             return
         }
 
-        userInstance.save flush:true
+        userInstance.save flush: true
 
         request.withFormat {
             form multipartForm {
@@ -181,18 +172,18 @@ class UserController {
         }
 
         if (userInstance.hasErrors()) {
-            respond userInstance.errors, view:'edit'
+            respond userInstance.errors, view: 'edit'
             return
         }
 
-        userInstance.save flush:true
+        userInstance.save flush: true
 
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.updated.message', args: [message(code: 'User.label', default: 'User'), userInstance.id])
                 redirect userInstance
             }
-            '*'{ respond userInstance, [status: OK] }
+            '*' { respond userInstance, [status: OK] }
         }
     }
 
@@ -204,14 +195,14 @@ class UserController {
             return
         }
 
-        userInstance.delete flush:true
+        userInstance.delete flush: true
 
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.deleted.message', args: [message(code: 'User.label', default: 'User'), userInstance.id])
-                redirect action:"index", method:"GET"
+                redirect action: "index", method: "GET"
             }
-            '*'{ render status: NO_CONTENT }
+            '*' { render status: NO_CONTENT }
         }
     }
 
@@ -221,7 +212,7 @@ class UserController {
                 flash.message = message(code: 'default.not.found.message', args: [message(code: 'user.label', default: 'User'), params.id])
                 redirect action: "index", method: "GET"
             }
-            '*'{ render status: NOT_FOUND }
+            '*' { render status: NOT_FOUND }
         }
     }
 }

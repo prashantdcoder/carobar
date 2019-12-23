@@ -1,0 +1,67 @@
+/*
+Created by IntelliJ IDEA.
+User: Prashant
+Date: 22/12/19
+Time: 12:17 AM
+*/
+
+/*========main================*/
+.wrap {
+    height: 400px;
+    margin: 42px 0;
+}
+
+.outer_div {
+    border: 1px solid #CCC;
+    border-radius: 2px;
+    height: 290px;
+    width: 500px;
+    margin: 0 auto;
+}
+
+.inner_div {
+    display: flex;
+    flex-direction: column;
+    padding: 70px;
+    height: 100%;
+}
+
+.inner_div a, button {
+    width: 100%;
+}
+
+.inner_div a {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.custom_btn {
+    height: 58px;
+    font-weight: 100;
+    background-color: #b61a20;
+    border: 1px solid #b61a20;
+    text-transform: uppercase;
+    color: white;
+}
+
+.custom_btn:hover {
+    opacity: 0.8 !important;
+    color: white;
+}
+
+.black_btn {
+    background: black;
+    color: white;
+}
+
+
+/*================header=================*/
+
+.width_20_percent {
+    width: 20%;
+}
+
+.width_20_percent img {
+    width: 100%;
+    height: 100%;
+}
