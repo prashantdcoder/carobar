@@ -13,6 +13,11 @@
 </head>
 
 <body>
-<p>The quick brown fox jumps over the lazy dog.</p>
+<div class="outer_div">
+    <div class="inner_div">
+        <a href="#"><button class="btn btn-default custom_btn">Login</button></a>
+        <a href="#"><button class="btn btn-default custom_btn black_btn">Registration</button></a>
+    </div>
+</div>
 </body>
 </html>
