@@ -8,161 +8,79 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
-    <title>Registeration</title>
-  %{--  <meta name="layout" content="main"/>--}%
-    <link rel="stylesheet" href="web-app/css/mycsss.css" type="text/css"/>
-    <link rel="stylesheet" href="css/mycss.css" type="text/css"/>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
-    <asset:stylesheet href="mycss"/>
-
+    <meta name='layout' content='main'/>
+    <title>Car-O-Bar | Registration</title>
 </head>
 
 <body>
-
-<nav class="navbar navbar-default navbar-fixed-top">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#myPage">CarOBar</a>
+<div>
+    <g:form controller="user" action="register" method='POST'>
+        <div class="register_wrap">
+            <g:if test='${flash.message}'>
+                <div class='alert alert-success'>${flash.message}</div>
+            </g:if>
         </div>
-        <div class="collapse navbar-collapse" id="myNavbar">
-            <ul class="nav navbar-nav navbar-right">
-                <li>  <g:link controller="home" action="index"><span class="glyphicon glyphicon-home"></span>HOME</g:link> </li>
-                <li>  <g:link controller="home" action="index"><span class="glyphicon glyphicon-shopping-cart"></span>SELL</g:link></li>
-                <li>  <g:link controller="home" action="index"><span class="glyphicon glyphicon-pencil"></span>FEEDBACK</g:link></li>
-                <li>  <g:link controller="home" action="index"><span class="glyphicon glyphicon-envelope"></span>MESSAGE</g:link> </li>
-            </ul>
+
+        <div class="register_wrap">
+            <div class="register_element_wrap">
+                <label for="username">Username</label>
+                <g:textField name="username" class="form-control" onblur="checkAvailability();"/>
+                <span><g:fieldError bean="${registerCO}" field="username"/></span>
+            </div>
+
+            <div class="register_element_wrap">
+                <label for="email">Email</label>
+                <g:textField class='form-control' name='email'/>
+                <span><g:fieldError bean="${registerCO}" field="email"/></span>
+            </div>
         </div>
-    </div>
-</nav>
-<div id='login'>
-    <div class='inner'>
-        <div class='fheader'>Registration Form</div>
-
-        <g:if test='${flash.message}'>
-            <div class='login_message' style="color: yellowgreen">${flash.message}</div>
-        </g:if>
-
-        <g:hasErrors bean="${userCommand}">
-          <i style="color: #f1ff1d;"> <g:renderErrors bean="${userCommand}" as="list" ></g:renderErrors></i>
-
-        </g:hasErrors>
 
 
-         <form action="user_details" method='POST' id='loginForm' class='cssform' autocomplete='off'>
-            <p>
+        <div class="register_wrap">
+            <div class="register_element_wrap">
+                <label for="number">Phone Number</label>
+                <g:textField class='form-control' name='number' maxlength="10"/>
+                <span><g:fieldError bean="${registerCO}" field="number"/></span>
+            </div>
+
+            <div class="register_element_wrap">
+                <label for="city">City</label>
+                <g:textField class='form-control' name='city'/>
+                <span><g:fieldError bean="${registerCO}" field="city"/></span>
+            </div>
+        </div>
 
 
-                <label> Username:</label>
-                <input type='text' class='text_' name='username' id='full_name' onblur="checkAvailability();"/><span id="user-availability-status" style="color:yellow;margin-left: 0px;"></span>
+        <div class="register_wrap">
+            <div class="register_element_wrap">
+                <label for="password">Password</label>
+                <g:passwordField class='form-control' name='password'/>
+                <span><g:fieldError bean="${registerCO}" field="password"/></span>
+            </div>
 
-            </p>
+            <div class="register_element_wrap">
+                <label for="confirmPassword">Confirm Password</label>
+                <g:passwordField class='form-control' name='confirmPassword'/>
+                <span><g:fieldError bean="${registerCO}" field="confirmPassword"/></span>
+            </div>
+        </div>
 
-            <p>
-                <label>Email:</label>
-                <input type='email' class='text_' name='email' id='email'/>
+        <div class="register_wrap">
+            <div class="register_element_wrap">
+                <g:hiddenField name="isRegister" value="true"/>
+                <input type='submit' id="submit" class="btn btn-default custom_btn" value='Register'/>
+            </div>
+        </div>
 
-            </p>
+    %{--<div class="register_element_wrap">
+        <label>Select Role:</label>
+        <g:select multiple="multiple" name="role" from="${com.carobar.Role.list()}" optionKey="authority"
+                  optionValue="authority" value="asc" style="color: black; width: 150px"/>
 
+    </div>--}%
 
-            <p>
-                <label>Phone Number:</label>
-                <input type='number' class='text_' name='number' id='number' maxlength="10"/>
+    </g:form>
 
-
-            </p>
-
-            <p>
-                <label>City:</label>
-                <input type='text' class='text_' name='city' id='city'/>
-
-            </p>
-
-            <p>
-                <label>Password:</label>
-                <input type='password' class='text_' name='password' id='password'/>
-
-            </p>
-
-            <p>
-                <label>Confirm Password:</label>
-                <input type='password' class='text_' name='confirm_password' id='confirm_password'/>
-
-            </p>
-
-            <p>
-                <label>Select Role: </label>
-                <g:select multiple="multiple" name="role" from="${com.carobar.Role.list()}" optionKey="authority" optionValue="authority" value="asc" style="color: black; width: 150px"   />
-
-            </p>
-
-            <p>
-                <input type='submit' id="submit" value='Submit'/>
-            </p>
-        </form>
-    </div>
 </div>
-
-<footer style="text-align: center;">
-&copy; Prashant.kumar@jellyfishtechnologies.com
-</footer>
-
-<script>
-    function checkAvailability() {
-
-        var username=document.getElementById("full_name").value;
-        var data={username:username};
-        jQuery.ajax({
-            type: "GET",
-            url: "${createLink(controller: 'user', action:'checkAvailability')}",
-            data:data,
-
-            success:function(result){
-                var status='';
-                if(result === 'exist'){
-
-                    status="Username is not available"
-                    $("#user-availability-status").html(status);
-                    $("#full_name").focus();
-
-                }
-                else {
-                    status="Username is available";
-                    $("#user-availability-status").html(status);
-
-                }
-            },
-            error: function (jqXHR, exception) {
-                var msg = '';
-                if (jqXHR.status === 0) {
-                    msg = 'Not connect.\n Verify Network.';
-                } else if (jqXHR.status == 404) {
-                    msg = 'Requested page not found. [404]';
-                } else if (jqXHR.status == 500) {
-                    msg = 'Internal Server Error [500].';
-                } else if (exception === 'parsererror') {
-                    msg = 'Requested JSON parse failed.';
-                } else if (exception === 'timeout') {
-                    msg = 'Time out error.';
-                } else if (exception === 'abort') {
-                    msg = 'Ajax request aborted.';
-                } else {
-                    msg = 'Uncaught Error.\n' + jqXHR.responseText;
-                }
-                alert(("msg: "+msg))
-            }
-        });
-    return false;
-    }
-</script>
 </body>
 </html>

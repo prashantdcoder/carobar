@@ -1,27 +1,44 @@
 package com.carobar
 
-import grails.plugin.springsecurity.annotation.Secured
-import grails.plugin.springsecurity.SpringSecurityService
-import static org.springframework.http.HttpStatus.*
-import grails.transaction.Transactional
-import grails.plugin.asyncmail.*
-
-
+import commandObject.RegisterCO
 import commandObject.UserCommand
+import dto.ResponseDTO
+import grails.plugin.asyncmail.AsynchronousMailService
+import grails.plugin.springsecurity.SpringSecurityService
+import grails.plugin.springsecurity.annotation.Secured
+import grails.transaction.Transactional
+
+import static org.springframework.http.HttpStatus.*
 
 @Transactional(readOnly = false)
 class UserController {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
+
     SpringSecurityService springSecurityService
+
     AsynchronousMailService asynchronousMailService
+
     def groovyPageRenderer
+
     def grailsLinkGenerator
+
     def userService
 
     @Secured(['IS_AUTHENTICATED_ANONYMOUSLY'])
-    def register() {
-
+    def register(RegisterCO registerCO) {
+        if (!registerCO.isRegister) {
+            render(view: 'register')
+        } else {
+            if (!registerCO.validate()) {
+                print(registerCO.errors)
+                render(view: 'register', model: [registerCO: registerCO])
+            } else {
+                ResponseDTO responseDTO = userService.saveUser(registerCO)
+                flash.message = responseDTO.message
+                render(view: 'register')
+            }
+        }
     }
 
     @Secured(['IS_AUTHENTICATED_ANONYMOUSLY'])

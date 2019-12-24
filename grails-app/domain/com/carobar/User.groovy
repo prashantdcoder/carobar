@@ -51,6 +51,16 @@ class User implements Serializable {
         password = springSecurityService?.passwordEncoder ? springSecurityService.encodePassword(password) : password
     }
 
+    static findByEmailOrUsername(String email, String username) {
+        User user = createCriteria().get {
+            or {
+                eq('username', username)
+                eq('email', email)
+            }
+        } as User
+        return user ?: null
+    }
+
     static transients = ['springSecurityService']
 
     static constraints = {

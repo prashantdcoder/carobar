@@ -65,6 +65,7 @@ grails.project.dependency.resolution = {
         //compile 'org.grails.plugins:asynchronous-mail:1.2.RC2'
 
         compile ":asynchronous-mail:1.2"
+        compile ":mail:1.0.7"
 
         // plugins for the compile step
         compile ":scaffolding:2.1.2"
