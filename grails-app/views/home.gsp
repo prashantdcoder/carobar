@@ -15,7 +15,9 @@
 <body>
 <div class="outer_div">
     <div class="inner_div">
-        <a href="#"><button class="btn btn-default custom_btn">Login</button></a>
+        <g:link controller="login" action="auth">
+            <button class="btn btn-default custom_btn">Login</button>
+        </g:link>
         <g:link controller="user" action="register">
             <button class="btn btn-default custom_btn black_btn">Registration</button>
         </g:link>

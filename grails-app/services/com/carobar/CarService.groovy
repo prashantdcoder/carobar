@@ -1,40 +1,16 @@
 package com.carobar
 
 import carvo.CarVo
-import commandObject.CarBasicsCommand
-import commandObject.CarCapacityCommand
-import commandObject.CarComfortCommand
-import commandObject.CarCommand
-import commandObject.CarCompany
-import commandObject.CarEngineCommand
-import commandObject.CarSafetyCommand
-import commandObject.CarSearchCO
-import commandObject.FuelType
-import grails.plugin.asyncmail.AsynchronousMailService
+import commandObject.*
 import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.transaction.Transactional
 import org.codehaus.groovy.grails.commons.GrailsApplication
-import org.springframework.web.multipart.MultipartException
-import org.springframework.web.multipart.MultipartFile
 //import spock.util.mop.Use
-
-import javax.servlet.http.HttpServletResponse.*;
-
-import grails.plugin.springsecurity.annotation.Secured
-import liquibase.util.file.FilenameUtils
-import org.springframework.web.multipart.MultipartException
-
-
-import javax.imageio.ImageIO
-import java.awt.image.BufferedImage
-import java.io.*
-import java.lang.*
-import java.io.File;
 
 @Transactional
 class CarService {
     GrailsApplication grailsApplication
-    AsynchronousMailService asynchronousMailService
+//    AsynchronousMailService asynchronousMailService
     def groovyPageRenderer
     def grailsLinkGenerator
     def photoUpload(def file, String number, Integer price, String title, String type, def multiFiles, String carCompany, User user) {
@@ -304,12 +280,12 @@ class CarService {
             wishlist1.save(flush: true,failOnError: true)
 
             String content=groovyPageRenderer.render(view: "/home/interestedUser",model: [user:user,car: car])
-            asynchronousMailService.sendMail {
+            /*asynchronousMailService.sendMail {
                 to 'rhlsngh994@gmail.com'   // def email=user.email
                 subject 'carobarTest';
 
                 html content
-            }
+            }*/
             return "success"
         }
     }

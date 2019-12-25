@@ -3,7 +3,6 @@ package com.carobar
 import commandObject.RegisterCO
 import commandObject.UserCommand
 import dto.ResponseDTO
-import grails.plugin.asyncmail.AsynchronousMailService
 import grails.plugin.springsecurity.SpringSecurityService
 import grails.plugin.springsecurity.annotation.Secured
 import grails.transaction.Transactional
@@ -16,8 +15,6 @@ class UserController {
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
     SpringSecurityService springSecurityService
-
-    AsynchronousMailService asynchronousMailService
 
     def groovyPageRenderer
 

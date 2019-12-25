@@ -2,8 +2,8 @@ package com.carobar
 
 import commandObject.RegisterCO
 import constants.MessageConstant
+import constants.RoleConstant
 import dto.ResponseDTO
-import grails.plugin.asyncmail.*
 import grails.transaction.Transactional
 
 @Transactional
@@ -11,8 +11,6 @@ class UserService {
     def groovyPageRenderer
 
     def grailsLinkGenerator
-
-    AsynchronousMailService asynchronousMailService
 
     ResponseDTO saveUser(RegisterCO registerCO) {
         ResponseDTO responseDTO = new ResponseDTO()
@@ -24,15 +22,13 @@ class UserService {
                     email: registerCO.email,
                     number: registerCO.number,
                     city: registerCO.city,
-                    password: registerCO.password
+                    password: registerCO.password,
+                    enabled: true
             )
             user.save(failOnError: true)
-            String content = groovyPageRenderer.render(view: "/user/verifyEmail", model: [path: grailsLinkGenerator.serverBaseURL, id: user.id])
-            sendMail {
-                to registerCO.email
-                subject MessageConstant.ACCOUNT_VERIFICATION_SUBJECT
-                html content
-            }
+            UserRole userRole = new UserRole(user: user, role: Role.findByAuthority(RoleConstant.ROLE_BUYER))
+            userRole.save(failOnError: true)
+            //TODO : Sending e-mail to verify account
             responseDTO.setSuccessResponse(null, MessageConstant.VERIFICATION_LINK_SENT)
         }
         return responseDTO
@@ -53,11 +49,11 @@ class UserService {
         User user1 = User.findByEmail(email)
         String content = groovyPageRenderer.render(view: "/user/verifyEmail", model: [path: grailsLinkGenerator.serverBaseURL, id: user1.id])
 
-        asynchronousMailService.sendMail {
+        /*asynchronousMailService.sendMail {
             to email
             subject 'CaroBar';
             html content
-        }
+        }*/
 
     }
 
@@ -70,12 +66,12 @@ class UserService {
         user.save(flush: true, failOnError: true)
 
         String content = groovyPageRenderer.render(view: "/user/confirmEmail", model: [uuid: uuid, path: grailsLinkGenerator.serverBaseURL])
-        asynchronousMailService.sendMail {
+        /*asynchronousMailService.sendMail {
             to email
             subject 'CaroBarTest';
 
             html content
-        }
+        }*/
 
 
     }

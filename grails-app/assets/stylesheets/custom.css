@@ -113,3 +113,8 @@ Time: 12:17 AM
 .register_element_wrap span {
     color: #b0272d;
 }
+
+.email_link_alert {
+    width: 77%;
+    text-align: center;
+}

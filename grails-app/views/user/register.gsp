@@ -17,7 +17,7 @@
     <g:form controller="user" action="register" method='POST'>
         <div class="register_wrap">
             <g:if test='${flash.message}'>
-                <div class='alert alert-success'>${flash.message}</div>
+                <div class='alert alert-success email_link_alert'>${flash.message}</div>
             </g:if>
         </div>
 
