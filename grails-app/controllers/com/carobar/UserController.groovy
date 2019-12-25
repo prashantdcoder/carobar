@@ -28,7 +28,6 @@ class UserController {
             render(view: 'register')
         } else {
             if (!registerCO.validate()) {
-                print(registerCO.errors)
                 render(view: 'register', model: [registerCO: registerCO])
             } else {
                 ResponseDTO responseDTO = userService.saveUser(registerCO)
