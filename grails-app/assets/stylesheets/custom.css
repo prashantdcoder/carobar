@@ -7,8 +7,8 @@ Time: 12:17 AM
 
 /*========main================*/
 .wrap {
-    height: 400px;
-    margin: 42px 0;
+    height: auto;
+    margin: 42px 100px;
 }
 
 .outer_div {
@@ -117,4 +117,14 @@ Time: 12:17 AM
 .email_link_alert {
     width: 77%;
     text-align: center;
+}
+
+/*==================buyerIndex========================*/
+.banner_red_color {
+    background-color: #f5bcbc !important;
+}
+
+.product_description {
+    display: flex;
+    flex-direction: column;
 }

@@ -6,6 +6,7 @@ import constants.RoleConstant
 import grails.converters.JSON
 import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.plugin.springsecurity.annotation.Secured
+import viewObject.CarVO
 
 import javax.imageio.ImageIO
 import java.awt.image.BufferedImage
@@ -29,7 +30,8 @@ class HomeController {
             carList = Car.findAllByUser(user)
             render(view: 'car', model: [sellercar: carList])
         } else {
-            redirect(controller: 'home', action: 'search')
+            List<CarVO> carVOList = Car.findAllActiveCarList().collect { new CarVO(it) }
+            render(view: 'buyerIndex', model: [carList: carVOList])
         }
     }
 

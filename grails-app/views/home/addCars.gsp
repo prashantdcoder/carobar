@@ -5,7 +5,7 @@
   Time: 2:45 PM
 --%>
 
-<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page import="enums.FuelType" contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
     <title>CaroBar</title>
@@ -150,7 +150,7 @@
                                         <label> <g:message code="commandObject.CarBasicsCommand.fuelType.label"/></label>
                                     </td>
                                     <td>
-                                        <g:select name="fuel" style="margin-left: 100px;width: 210px;" from="${commandObject.FuelType?.values()}" keys="${commandObject.FuelType.values()*.name()}" required="" value="${fieldValue(bean: fuel, field: 'fuel')}"/>
+                                        <g:select name="fuel" style="margin-left: 100px;width: 210px;" from="${enums.FuelType?.values()}" keys="${enums.FuelType.values()*.name()}" required="" value="${fieldValue(bean: fuel, field: 'fuel')}"/>
                                     </td>
                                 </tr>
                                 <tr>

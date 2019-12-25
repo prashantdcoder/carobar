@@ -9,6 +9,7 @@ class BootStrap {
 
         bootStrapService.initRole()
         bootStrapService.initUser()
+        bootStrapService.initCar()
     }
     def destroy = {
     }
