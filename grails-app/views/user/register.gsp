@@ -24,13 +24,13 @@
         <div class="register_wrap">
             <div class="register_element_wrap">
                 <label for="username">Username</label>
-                <g:textField name="username" class="form-control" onblur="checkAvailability();"/>
+                <g:textField name="username" class="form-control" value="${registerCO?.username}"/>
                 <span><g:fieldError bean="${registerCO}" field="username"/></span>
             </div>
 
             <div class="register_element_wrap">
                 <label for="email">Email</label>
-                <g:textField class='form-control' name='email'/>
+                <g:textField class='form-control' name='email' value="${registerCO?.email}"/>
                 <span><g:fieldError bean="${registerCO}" field="email"/></span>
             </div>
         </div>
@@ -39,13 +39,13 @@
         <div class="register_wrap">
             <div class="register_element_wrap">
                 <label for="number">Phone Number</label>
-                <g:textField class='form-control' name='number' maxlength="10"/>
+                <g:textField class='form-control' name='number' value="${registerCO?.number}" maxlength="10"/>
                 <span><g:fieldError bean="${registerCO}" field="number"/></span>
             </div>
 
             <div class="register_element_wrap">
                 <label for="city">City</label>
-                <g:textField class='form-control' name='city'/>
+                <g:textField class='form-control' value="${registerCO?.city}" name='city'/>
                 <span><g:fieldError bean="${registerCO}" field="city"/></span>
             </div>
         </div>
