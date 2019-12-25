@@ -1,12 +1,14 @@
 package commandObject
 
 import com.carobar.Car
+import enums.FuelType
+import grails.validation.Validateable
 
 
 /**
  * Created by prashantk on 14/3/17.
  */
-@grails.validation.Validateable
+@Validateable
 class CarBasicsCommand {
     Date year
     Long distance

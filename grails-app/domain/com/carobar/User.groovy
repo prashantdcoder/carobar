@@ -71,5 +71,5 @@ class User implements Serializable {
         uuid nullable: true
     }
 
-    static hasMany = [car: Car, feedback: Feedback]
+    static hasMany = [feedback: Feedback]
 }

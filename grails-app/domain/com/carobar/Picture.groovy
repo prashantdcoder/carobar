@@ -2,16 +2,7 @@ package com.carobar
 
 class Picture {
 
-    Car car
-    String pictureName
+    String name
 
-    Picture(Car id,String pictureName){
-        this.car=id
-        this.pictureName=pictureName
-    }
-    static constraints = {
-
-        pictureName nullable: true
-    }
-    static belongsTo = [car:Car]
+    static belongsTo = [car: Car]
 }

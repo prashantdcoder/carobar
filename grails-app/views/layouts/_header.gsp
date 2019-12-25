@@ -46,6 +46,12 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="#">Contact</a>
                             </li>
+
+                            <sec:ifLoggedIn roles="Buyer_ROLE">
+                                <li class="nav-item">
+                                    <g:link controller="logout" class="nav-link" action="index">logout</g:link>
+                                </li>
+                            </sec:ifLoggedIn>
                         </ul>
                     </div>
 

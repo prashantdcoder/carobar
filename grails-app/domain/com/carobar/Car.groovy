@@ -1,44 +1,54 @@
 package com.carobar
 
-import commandObject.CarCompany
 
+import enums.CarType
+import enums.CompanyType
+import enums.FuelType
 
 class Car {
 
-    String carTitle
-    String carNumber
-    String carType
-    Integer carPrice
-    String carImage
-    User user
-    CarCompany carCompany
-    Boolean soldOut
+    String title
+    String number
+    CarType type
+    Double price
+    Integer year
+
+    CompanyType companyType
+    FuelType fuelType
+
+    User seller
     User buyer
-    CarComfort carComfort
-    CarBasics carBasics
-    CarCapacity carCapacity
-    CarEngineTransmission carEngineTransmission
-    CarSafety carSafety
+
+    Boolean isActive = true
+    Boolean isSold = false
+    Date dateCreated
+    Date lastUpdated
 
     static constraints = {
-        carTitle nullable: false,blank: false
-        carNumber nullable: false,blank: false
-        carType nullable: false,blank: false
-        carPrice nullable: false,blank: false
-        carComfort nullable: true
-        carBasics nullable: true
-        carSafety nullable: true
-        carCapacity nullable: true
-        carEngineTransmission nullable: true
-        carImage nullable: false
+        comfort nullable: true
+        basic nullable: true
+        safety nullable: true
+        capacity nullable: true
+        engine nullable: true
         buyer nullable: true
-
+        seller nullable: true
     }
 
-    static  hasMany = [pictures :Picture]
-    static hasOne = [carCapacity:CarCapacity,carComfort:CarComfort,carEngineTransmission:CarEngineTransmission,carSafety:CarSafety,carBasics:CarBasics]
-    static belongsTo = [user:User]
+    static hasMany = [images: Picture]
 
+    static hasOne = [
+            capacity: CarCapacity,
+            comfort : CarComfort,
+            engine  : CarEngineTransmission,
+            safety  : CarSafety,
+            basic   : CarBasics
+    ]
 
+    static List<Car> findAllActiveCarList() {
+        List<Car> carList = createCriteria().listDistinct {
+            eq('isActive', true)
+        } as List<Car>
+        return carList ?: []
+    }
 
 }

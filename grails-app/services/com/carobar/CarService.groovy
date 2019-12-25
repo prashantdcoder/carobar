@@ -2,6 +2,7 @@ package com.carobar
 
 import carvo.CarVo
 import commandObject.*
+import enums.FuelType
 import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.transaction.Transactional
 import org.codehaus.groovy.grails.commons.GrailsApplication
