@@ -95,3 +95,26 @@ Time: 12:17 AM
 .error_color {
     color: #b0272d;
 }
+
+/*====================register=======================*/
+.register_wrap {
+    display: flex;
+    justify-content: space-evenly;
+    padding: 0 66px;
+    margin: 13px 53px;
+}
+
+.register_element_wrap {
+    display: flex;
+    flex-direction: column;
+    width: 33%;
+}
+
+.register_element_wrap span {
+    color: #b0272d;
+}
+
+.email_link_alert {
+    width: 77%;
+    text-align: center;
+}
