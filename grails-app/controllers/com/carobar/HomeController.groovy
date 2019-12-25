@@ -20,17 +20,18 @@ class HomeController {
 
     @Secured("IS_AUTHENTICATED_FULLY")
     def index() {
-        List<Car> carList = []
+        List<CarVO> carVOList = []
         User user = springSecurityService.getCurrentUser()
         if (SpringSecurityUtils.ifAllGranted(RoleConstant.ROLE_ADMIN)) {
             def c = Car.createCriteria()
-            carList = c.list(max: params.max ?: 5, offset: params.offset ?: 0) {} as List<Car>
+            List<Car> carList = c.list(max: params.max ?: 5, offset: params.offset ?: 0) {} as List<Car>
             [carList: carList, carsCount: carList.totalCount, params: params]
         } else if (SpringSecurityUtils.ifAllGranted(RoleConstant.ROLE_SELLER)) {
-            carList = Car.findAllByUser(user)
-            render(view: 'car', model: [sellercar: carList])
+            carVOList = Car.findAllActiveCarBySeller(user).collect { new CarVO(it) }
+//            render(view: 'car', model: [carList: carVOList])
+            render(view: 'sellerIndex', model: [carList: carVOList])
         } else {
-            List<CarVO> carVOList = Car.findAllActiveCarList().collect { new CarVO(it) }
+            carVOList = Car.findAllActiveCarList().collect { new CarVO(it) }
             render(view: 'buyerIndex', model: [carList: carVOList])
         }
     }

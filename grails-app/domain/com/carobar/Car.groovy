@@ -51,4 +51,11 @@ class Car {
         return carList ?: []
     }
 
+    static List<Car> findAllActiveCarBySeller(User seller) {
+        List<Car> carList = createCriteria().listDistinct {
+            eq('seller', seller)
+        } as List<Car>
+        return carList ?: []
+    }
+
 }

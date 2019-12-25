@@ -47,9 +47,17 @@
                                 <a class="nav-link" href="#">Contact</a>
                             </li>
 
-                            <sec:ifLoggedIn roles="Buyer_ROLE">
+                            <sec:ifAnyGranted roles="ROLE_SELLER">
                                 <li class="nav-item">
-                                    <g:link controller="logout" class="nav-link" action="index">logout</g:link>
+                                    <a class="nav-link" href="#">Add</a>
+                                </li>
+                            </sec:ifAnyGranted>
+
+                            <sec:ifLoggedIn>
+                                <li class="nav-item">
+                                    <form name="submitForm" method="POST" action="${createLink(controller: 'logout')}">
+                                        <a class="nav-link" href="javascript:document.submitForm.submit()">logout</a>
+                                    </form>
                                 </li>
                             </sec:ifLoggedIn>
                         </ul>
