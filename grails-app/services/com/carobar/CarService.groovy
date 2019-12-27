@@ -2,6 +2,7 @@ package com.carobar
 
 import carvo.CarVo
 import commandObject.*
+import constants.MessageConstant
 import dto.ResponseDTO
 import enums.FuelType
 import grails.plugin.springsecurity.SpringSecurityUtils
@@ -485,6 +486,34 @@ class CarService {
             car.save(failOnError: true)
             responseDTO.setSuccessResponse(null, "")
         } catch (Exception e) {
+            responseDTO.setFailureResponse("")
+        }
+        return responseDTO
+    }
+
+    ResponseDTO addDimension(DimensionCO dimensionCO) {
+        ResponseDTO responseDTO = new ResponseDTO()
+        try {
+            Car inCompletedCar = Car.fetchIncompleteCar()
+            if (!inCompletedCar) {
+                responseDTO.setFailureResponse(MessageConstant.NO_CAR_FOUND)
+            } else {
+                Dimension dimension = new Dimension(
+                        length: dimensionCO.length,
+                        width: dimensionCO.width,
+                        height: dimensionCO.height,
+                        weight: dimensionCO.weight,
+                        groundClearance: dimensionCO.groundClearance,
+                        fuelCapacity: dimensionCO.fuelCapacity,
+                        seatCapacity: dimensionCO.seatCapacity,
+                        wheelBase: dimensionCO.wheelBase,
+                        car: inCompletedCar
+                )
+                dimension.save(failOnError: true)
+                responseDTO.setSuccessResponse(null, "")
+            }
+        } catch (Exception e) {
+            println(e)
             responseDTO.setFailureResponse("")
         }
         return responseDTO
