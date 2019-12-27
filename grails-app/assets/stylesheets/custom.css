@@ -128,3 +128,34 @@ Time: 12:17 AM
     display: flex;
     flex-direction: column;
 }
+
+/*=====================add car============================*/
+
+.steps_banner {
+    padding: 12px;
+    background: #b61a20;
+    color: white;
+    margin-bottom: 4px;
+}
+
+.steps_banner h1 {
+    color: white;
+}
+
+.car_main_div {
+    padding: 10px;
+}
+
+.justify_content_normal {
+    display: flex;
+    justify-content: normal;
+    margin: 0 150px;
+}
+
+.width_43_percent {
+    width: 43%;
+}
+
+.text_color_red {
+    color: darkred;
+}

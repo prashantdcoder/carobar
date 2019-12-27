@@ -8,10 +8,12 @@ enum FuelType {
     PETROL('Petrol'),
     DIESEL('Diesel'),
     ELECTRIC('Electric')
-    String value
+
+    final String value, key
 
     FuelType(String value) {
         this.value = value
+        this.key = name()
     }
 
 }

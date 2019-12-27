@@ -1,7 +1,7 @@
 package com.carobar
 
 import enums.FuelType
-import commandObject.States
+import enums.States
 
 class CarBasics {
 

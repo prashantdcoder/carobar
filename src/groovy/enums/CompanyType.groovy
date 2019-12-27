@@ -9,10 +9,11 @@ enum CompanyType {
     RENAULT('Renault'),
     FORD('Ford')
 
-    String value
+    final String value, key
 
     CompanyType(String value) {
         this.value = value
+        this.key = name()
     }
 
 }

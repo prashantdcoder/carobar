@@ -12,7 +12,6 @@
     <asset:stylesheet src="bootstrap.css"/>
     <asset:stylesheet src="custom.css"/>
     <asset:stylesheet src="style.css"/>
-
     <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
     <g:layoutHead/>
