@@ -9,7 +9,7 @@
 <html>
 <head>
     <meta name="layout" content="main"/>
-    <title>Car-O-Bar | Add</title>
+    <title>Car-O-Bar | Add Basic</title>
     <asset:javascript src="bootstrap-datepicker.js"/>
     <asset:stylesheet src="bootstrap-datepicker.css"/>
     <asset:javascript src="custom.js"/>

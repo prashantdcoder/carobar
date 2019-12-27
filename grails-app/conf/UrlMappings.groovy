@@ -9,6 +9,7 @@ class UrlMappings {
 
         "/"(view: "/home")
         "/basic"(controller: 'car', action: 'index')
+        "/capacity"(controller: 'car', action: 'dimension')
         "500"(view: '/error')
         "404"(view: 'error/pageNotFound')
     }

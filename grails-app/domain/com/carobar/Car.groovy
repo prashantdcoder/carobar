@@ -63,4 +63,12 @@ class Car {
         return carList ?: []
     }
 
+    static Car fetchIncompleteCar() {
+        Car car = createCriteria().get {
+            eq('isActive', true)
+            eq('isCompleted', false)
+        } as Car
+        return car ?: null
+    }
+
 }
