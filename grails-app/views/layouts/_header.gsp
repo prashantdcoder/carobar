@@ -49,7 +49,7 @@
 
                             <sec:ifAnyGranted roles="ROLE_SELLER">
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#">Add</a>
+                                    <g:link class="nav-link" controller="car" action="index">Add</g:link>
                                 </li>
                             </sec:ifAnyGranted>
 

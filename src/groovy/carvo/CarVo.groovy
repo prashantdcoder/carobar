@@ -4,7 +4,7 @@ import com.carobar.Car
 /*import com.google.common.collect.Constraints*/
 import commandObject.CarCompany
 import enums.FuelType
-import commandObject.States
+import enums.States
 import grails.validation.Validateable
 
 /**

@@ -4,6 +4,7 @@ package com.carobar
 import enums.CarType
 import enums.CompanyType
 import enums.FuelType
+import enums.States
 
 class Car {
 
@@ -12,6 +13,7 @@ class Car {
     CarType type
     Double price
     Integer year
+    States city
 
     CompanyType companyType
     FuelType fuelType
@@ -19,6 +21,7 @@ class Car {
     User seller
     User buyer
 
+    Boolean isCompleted = false
     Boolean isActive = true
     Boolean isSold = false
     Date dateCreated
@@ -32,16 +35,18 @@ class Car {
         engine nullable: true
         buyer nullable: true
         seller nullable: true
+        city nullable: true
     }
 
     static hasMany = [images: Picture]
 
     static hasOne = [
-            capacity: CarCapacity,
-            comfort : CarComfort,
-            engine  : CarEngineTransmission,
-            safety  : CarSafety,
-            basic   : CarBasics
+            capacity : CarCapacity,
+            comfort  : CarComfort,
+            engine   : CarEngineTransmission,
+            safety   : CarSafety,
+            basic    : CarBasics,
+            dimension: Dimension
     ]
 
     static List<Car> findAllActiveCarList() {

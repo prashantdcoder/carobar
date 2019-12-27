@@ -6,9 +6,10 @@ enum CarType {
     SEDAN("Sedan"),
     SUV("SUV")
 
-    final String value
+    final String value, key
 
     CarType(String value) {
         this.value = value
+        this.key = name()
     }
 }

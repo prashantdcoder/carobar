@@ -2,6 +2,7 @@ package commandObject
 
 import com.carobar.Car
 import enums.FuelType
+import enums.States
 import grails.validation.Validateable
 
 
