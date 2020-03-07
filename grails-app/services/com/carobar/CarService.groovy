@@ -7,9 +7,9 @@ import dto.ResponseDTO
 import enums.FuelType
 import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.transaction.Transactional
+import grails.validation.ValidationException
 import org.codehaus.groovy.grails.commons.GrailsApplication
 
-//import spock.util.mop.Use
 
 @Transactional
 class CarService {
@@ -485,36 +485,82 @@ class CarService {
             )
             car.save(failOnError: true)
             responseDTO.setSuccessResponse(null, "")
+        } catch (ValidationException vex) {
+            log.error(vex.getMessage())
+        }
+        catch (Exception e) {
+            responseDTO.setFailureResponse(null)
+        }
+        return responseDTO
+    }
+
+    ResponseDTO addDimension(DimensionCO dimensionCO, User seller) {
+        ResponseDTO responseDTO = new ResponseDTO()
+        try {
+
+            Dimension dimension = new Dimension(
+                    length: dimensionCO.length,
+                    width: dimensionCO.width,
+                    height: dimensionCO.height,
+                    weight: dimensionCO.weight,
+                    groundClearance: dimensionCO.groundClearance,
+                    fuelCapacity: dimensionCO.fuelCapacity,
+                    seatCapacity: dimensionCO.seatCapacity,
+                    wheelBase: dimensionCO.wheelBase,
+                    car: fetchRecentIncompleteCar(seller)
+            )
+            dimension.save(failOnError: true)
+            responseDTO.setSuccessResponse(null, "")
+
         } catch (Exception e) {
             responseDTO.setFailureResponse("")
         }
         return responseDTO
     }
 
-    ResponseDTO addDimension(DimensionCO dimensionCO) {
+    Car fetchRecentIncompleteCar(User seller) {
+        List<Car> carList = Car.createCriteria().listDistinct {
+            eq('isActive', true)
+            eq('isCompleted', false)
+            eq('seller', seller)
+            order('dateCreated', 'desc')
+        } as List<Car>
+        return carList ? carList.first() : null
+    }
+
+    ResponseDTO uploadImage(ImageCO imageCO) {
         ResponseDTO responseDTO = new ResponseDTO()
         try {
-            Car inCompletedCar = Car.fetchIncompleteCar()
+            User seller = springSecurityService.currentUser as User
+            Car inCompletedCar = fetchRecentIncompleteCar(seller)
             if (!inCompletedCar) {
                 responseDTO.setFailureResponse(MessageConstant.NO_CAR_FOUND)
             } else {
-                Dimension dimension = new Dimension(
-                        length: dimensionCO.length,
-                        width: dimensionCO.width,
-                        height: dimensionCO.height,
-                        weight: dimensionCO.weight,
-                        groundClearance: dimensionCO.groundClearance,
-                        fuelCapacity: dimensionCO.fuelCapacity,
-                        seatCapacity: dimensionCO.seatCapacity,
-                        wheelBase: dimensionCO.wheelBase,
-                        car: inCompletedCar
-                )
-                dimension.save(failOnError: true)
+                List<Picture> pictureList = []
+                String folderPath = grailsApplication.config.grails.external.image.path
+                Boolean folder = new File("${folderPath}/${inCompletedCar.number}").exists()
+                if (folder) {
+                    imageCO.image1.transferTo(new File("${folderPath}/${inCompletedCar.number}/${imageCO.image1.originalFilename}"))
+                    /*imageCO.image2.transferTo(new File("${folderPath}/${inCompletedCar.number}/${imageCO.image2.originalFilename}"))
+                    imageCO.image3.transferTo(new File("${folderPath}/${inCompletedCar.number}/${imageCO.image3.originalFilename}"))
+                    imageCO.image4.transferTo(new File("${folderPath}/${inCompletedCar.number}/${imageCO.image4.originalFilename}"))*/
+                } else {
+
+                    boolean newFolder = new File("${folderPath}/${inCompletedCar.number}").mkdirs()
+                    imageCO.image1.transferTo(new File("${folderPath}/${inCompletedCar.number}/${imageCO.image1.originalFilename}"))
+                    /*imageCO.image1.transferTo(new File("${folderPath}/${inCompletedCar.number}/${imageCO.image1.originalFilename}"))
+                    imageCO.image1.transferTo(new File("${folderPath}/${inCompletedCar.number}/${imageCO.image1.originalFilename}"))
+                    imageCO.image1.transferTo(new File("${folderPath}/${inCompletedCar.number}/${imageCO.image1.originalFilename}"))*/
+                }
+                /*pictureList << new Picture(name: imageCO.image1.originalFilename, car: inCompletedCar)
+                pictureList << new Picture(name: imageCO.image2.originalFilename, car: inCompletedCar)
+                pictureList << new Picture(name: imageCO.image3.originalFilename, car: inCompletedCar)
+                pictureList << new Picture(name: imageCO.image4.originalFilename, car: inCompletedCar)*/
                 responseDTO.setSuccessResponse(null, "")
             }
+
         } catch (Exception e) {
-            println(e)
-            responseDTO.setFailureResponse("")
+            e.printStackTrace()
         }
         return responseDTO
     }

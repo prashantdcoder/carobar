@@ -8,8 +8,9 @@ class UrlMappings {
         }
 
         "/"(view: "/home")
-        "/basic"(controller: 'car', action: 'index')
-        "/capacity"(controller: 'car', action: 'dimension')
+        "/car-basic"(controller: 'car', action: 'index')
+        "/car-capacity"(controller: 'car', action: 'dimension')
+        "/car-picture"(controller: 'car', action: 'uploadImage')
         "500"(view: '/error')
         "404"(view: 'error/pageNotFound')
     }

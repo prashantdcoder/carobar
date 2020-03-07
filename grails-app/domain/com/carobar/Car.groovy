@@ -28,11 +28,12 @@ class Car {
     Date lastUpdated
 
     static constraints = {
-        comfort nullable: true
-        basic nullable: true
-        safety nullable: true
         capacity nullable: true
+        comfort nullable: true
         engine nullable: true
+        safety nullable: true
+        basic nullable: true
+        dimension nullable: true
         buyer nullable: true
         seller nullable: true
         city nullable: true
@@ -62,13 +63,4 @@ class Car {
         } as List<Car>
         return carList ?: []
     }
-
-    static Car fetchIncompleteCar() {
-        Car car = createCriteria().get {
-            eq('isActive', true)
-            eq('isCompleted', false)
-        } as Car
-        return car ?: null
-    }
-
 }

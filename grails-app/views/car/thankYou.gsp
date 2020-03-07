@@ -13,8 +13,6 @@
 </head>
 
 <body>
-<div class="steps_banner">
-    <h1>Thank You! Your car has been saved Successfully</h1>
-</div>
+<g:render template="/template/steps" model="[step: 'Thank You! Your car has been saved Successfully']"/>
 </body>
 </html>

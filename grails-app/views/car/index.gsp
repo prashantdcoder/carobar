@@ -16,9 +16,7 @@
 </head>
 
 <body>
-<div class="steps_banner">
-    <h1>Basic</h1>
-</div>
+<g:render template="/template/steps" model="[step: 'Basic']"/>
 
 <div class="car_main_div">
     <g:form controller="car" action="index" method="get">
@@ -93,13 +91,13 @@
             </div>
 
             <div class="register_element_wrap">
-                <label for="city">City</label>
+                <label for="city">City*</label>
                 <g:select class="form-control"
                           name="city"
                           from="${States.values()}"
-                          optionKey="value"
-                          noSelection="['': 'Select City']"
-                          value="value"/>
+                          optionValue="value"
+                          noSelection="['': 'Select City']"/>
+                <span><g:fieldError bean="${carCO}" field="city"/></span>
             </div>
         </div>
 

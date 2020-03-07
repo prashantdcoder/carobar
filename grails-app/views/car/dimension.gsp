@@ -13,9 +13,7 @@
 </head>
 
 <body>
-<div class="steps_banner">
-    <h1>Capacity</h1>
-</div>
+<g:render template="/template/steps" model="[step: 'Capacity']"/>
 
 <div class="car_main_div">
     <g:form controller="car" action="dimension" method="get">

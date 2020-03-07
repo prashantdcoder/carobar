@@ -42,6 +42,7 @@ Time: 12:17 AM
     border: 1px solid #b61a20;
     text-transform: uppercase;
     color: white;
+    min-width: 225px;
 }
 
 .border_radius_4px {
@@ -130,7 +131,6 @@ Time: 12:17 AM
 }
 
 /*=====================add car============================*/
-
 .steps_banner {
     padding: 12px;
     background: #b61a20;
@@ -158,4 +158,29 @@ Time: 12:17 AM
 
 .text_color_red {
     color: darkred;
+}
+
+.inputfile {
+    width: 30px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+}
+
+
+.inputfile + label {
+    font-size: 1.25em;
+    font-weight: 700;
+    color: white;
+    background-color: darkred;
+    display: inline-block;
+}
+
+.inputfile:focus + label,
+.inputfile + label:hover {
+    opacity: 0.8;
+}
+
+.inputfile + label {
+    cursor: pointer; /* "hand" cursor */
 }
