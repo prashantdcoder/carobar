@@ -16,3 +16,6 @@ stacktrace.log
 /.link_to_grails_plugins/
 /target-eclipse/
 /.slcache
+/carobar.iml
+/carobar-grailsPlugins.iml
+/.idea
