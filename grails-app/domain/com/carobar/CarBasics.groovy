@@ -1,7 +1,7 @@
 package com.carobar
 
-import enums.FuelType
-import enums.States
+import commandObject.FuelType
+import commandObject.States
 
 class CarBasics {
 
@@ -13,10 +13,10 @@ class CarBasics {
 
     static constraints = {
         year nullable: true
-        distance nullable: true, blank: true
+        distance nullable: true,blank:true
         fuel nullable: true
         city nullable: true
         car nullable: true
     }
-    static belongsTo = [car: Car]
+    static belongsTo = [car:Car]
 }

@@ -1,61 +1,94 @@
 package com.carobar
 
 import carvo.CarVo
-import commandObject.*
-import constants.MessageConstant
-import dto.ResponseDTO
-import enums.FuelType
+import commandObject.CarBasicsCommand
+import commandObject.CarCapacityCommand
+import commandObject.CarComfortCommand
+import commandObject.CarCommand
+import commandObject.CarCompany
+import commandObject.CarEngineCommand
+import commandObject.CarSafetyCommand
+import commandObject.CarSearchCO
+import commandObject.FuelType
+import grails.plugin.asyncmail.AsynchronousMailService
 import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.transaction.Transactional
-import grails.validation.ValidationException
 import org.codehaus.groovy.grails.commons.GrailsApplication
+import org.springframework.web.multipart.MultipartException
+import org.springframework.web.multipart.MultipartFile
+//import spock.util.mop.Use
 
+import javax.servlet.http.HttpServletResponse.*;
+
+import grails.plugin.springsecurity.annotation.Secured
+import liquibase.util.file.FilenameUtils
+import org.springframework.web.multipart.MultipartException
+
+
+import javax.imageio.ImageIO
+import java.awt.image.BufferedImage
+import java.io.*
+import java.lang.*
+import java.io.File;
 
 @Transactional
 class CarService {
     GrailsApplication grailsApplication
-//    AsynchronousMailService asynchronousMailService
-
+    AsynchronousMailService asynchronousMailService
     def groovyPageRenderer
-
-    def springSecurityService
-
     def grailsLinkGenerator
-
     def photoUpload(def file, String number, Integer price, String title, String type, def multiFiles, String carCompany, User user) {
+
         Car car = new Car()
-        def imageName = file.originalFilename
+
+        def imageName=file.originalFilename
+
         car.carTitle = title
         car.carImage = imageName
         car.carType = type
         car.carPrice = price
         car.carNumber = number
-        car.carCompany = carCompany
-        car.user = user
-        car.soldOut = false
-        car.buyer = null
+        car.carCompany=carCompany
+        car.user=user
+        car.soldOut=false
+        car.buyer=null
+
 
         String picturePath = "${grailsApplication.config.imagePath}"
-        Boolean folder = new File("/home/prashantk/Documents/carobarimages/${car.carNumber}").exists()
-        if (folder == true) {
+
+
+         Boolean folder=new File("/home/prashantk/Documents/carobarimages/${car.carNumber}").exists()
+
+        if (folder==true)
+        {
+
             file.transferTo(new File("${grailsApplication.config.imagePath}/${car.carNumber}/${imageName}"))
-        } else {
-            def newFolder = new File("${grailsApplication.config.imagePath}/${car.carNumber}").mkdirs()
         }
+       else
+        {
+
+            def newFolder=new File("${grailsApplication.config.imagePath}/${car.carNumber}").mkdirs()
+        }
+
         car.save(flush: true, failOnError: true)
-        def id = car.getId()
-        Car carId = Car.findByCarNumber(number)
+        def id= car.getId()
+
+        Car carId=Car.findByCarNumber(number)
+
+
         multiFiles.each {
+
             Picture picture = new Picture(car: carId.id, pictureName: it.originalFilename)
             picture.save(flush: true, failOnError: true)
-            it.transferTo(new File("${grailsApplication.config.imagePath}/${car.carNumber}/${it.originalFilename}"))
+          it.transferTo(new File("${grailsApplication.config.imagePath}/${car.carNumber}/${it.originalFilename}"))
+
         }
         return id
-    }
+        }
 
-    def showImage(String image) {
+   def showImage(String image){
         String profileImagePath = "${grailsApplication.config.imagePath}"
-        File imageFile = new File(profileImagePath + image)
+        File imageFile =new File(profileImagePath+image)
         String ext = getFileExtension(imageFile)
 
         return ext
@@ -63,121 +96,28 @@ class CarService {
 
     private static String getFileExtension(File file) {
         String fileName = file.getName();
-        if (fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0)
-            return fileName.substring(fileName.lastIndexOf(".") + 1);
+        if(fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0)
+            return fileName.substring(fileName.lastIndexOf(".")+1);
         else
             return "";
     }
 
-    void edit(CarCommand carCommand, def multipleFileImages) {
+    void edit(CarCommand carCommand, def multipleFileImages){
 
-        Car car = Car.findById(carCommand.id)
+        Car car=Car.findById(carCommand.id)
 
 
-        car.id = carCommand.id
-        car.carTitle = carCommand.carTitle
-        car.carNumber = carCommand.carNumber
+        car.id=carCommand.id
+        car.carTitle=carCommand.carTitle
+        car.carNumber=carCommand.carNumber
         car.carPrice = carCommand.carPrice
-        car.carType = carCommand.carType
-        car.carCompany = carCommand.carCompany
+        car.carType=carCommand.carType
+        car.carCompany=carCommand.carCompany
 
-        def folder = new File("/home/prashantk/Documents/carobarimages/${car.carNumber}").exists()
-        if (folder == true) {
-            multipleFileImages.each {
-
-                Picture picture = new Picture(car: car.id, pictureName: it.originalFilename)
-                picture.save(flush: true, failOnError: true)
-                it.transferTo(new File("${grailsApplication.config.imagePath}/${car.carNumber}/${it.originalFilename}"))
-
-            }
-        }
-
-
-    }
-
-    void insertGenSpecs(CarBasicsCommand carBasicsCommand, def id, def year) {
-
-        CarBasics carBasics = new CarBasics(car: id,
-                city: carBasicsCommand.city,
-                distance: carBasicsCommand.distance,
-                fuel: carBasicsCommand.fuel,
-                year: year)
-        carBasics.save(flush: true, failOnError: true)
-    }
-
-    void insertEngineSpecs(CarEngineCommand carEngineCommand, def id) {
-
-        CarEngineTransmission carEngineTransmission = new CarEngineTransmission(acceleration: carEngineCommand.acceleration,
-                topSpeed: carEngineCommand.topSpeed,
-                engineDescription: carEngineCommand.engineDescription,
-                cylinders: carEngineCommand.cylinders,
-                maxPower: carEngineCommand.maxPower,
-                maxTorque: carEngineCommand.maxTorque,
-                car: id)
-        carEngineTransmission.save(flush: true, failOnError: true)
-    }
-
-    void insertCapacity(CarCapacityCommand carCapacityCommand, def id) {
-
-        CarCapacity carCapacity = new CarCapacity(fuelCapacity: carCapacityCommand.fuelCapacity,
-                height: carCapacityCommand.height,
-                length: carCapacityCommand.length,
-                seatCapacity: carCapacityCommand.seatCapacity,
-                tyreType: carCapacityCommand.tyreType,
-                weight: carCapacityCommand.weight,
-                wheelSize: carCapacityCommand.wheelSize,
-                width: carCapacityCommand.width,
-                car: id)
-        carCapacity.save(flush: true, failOnError: true)
-
-    }
-
-    void insertComfort(CarComfortCommand carComfortCommand, def id) {
-
-        CarComfort carComfort = new CarComfort(ac: carComfortCommand.ac,
-                poweSteering: carComfortCommand.poweSteering,
-                powerButton: carComfortCommand.powerButton,
-                transmissionType: carComfortCommand.transmissionType,
-                navigationSystem: carComfortCommand.navigationSystem,
-                audioSystem: carComfortCommand.audioSystem,
-                bluetooth: carComfortCommand.bluetooth,
-                car: id)
-        carComfort.save(flush: true, failOnError: true)
-
-
-    }
-
-    void insertSafety(CarSafetyCommand carSafetyCommand, def id) {
-
-        CarSafety carSafety = new CarSafety(antiLockBreaking: carSafetyCommand.antiLockBreaking,
-                parkingSensor: carSafetyCommand.parkingSensor,
-                centralLocking: carSafetyCommand.centralLocking,
-                airBags: carSafetyCommand.airBags,
-                crashSensor: carSafetyCommand.crashSensor,
-                antiTheftAlarm: carSafetyCommand.antiTheftAlarm,
-                powerDoorLocks: carSafetyCommand.powerDoorLocks,
-                rearCameras: carSafetyCommand.powerDoorLocks,
-                car: id)
-        carSafety.save(flush: true, failOnError: true)
-
-    }
-
-    void editCarDetails(CarVo carVo, def multiFiles, def id) {
-
-
-        Car car = Car.findById(id)
-
-        car.carTitle = carVo.carTitle
-        car.carNumber = carVo.carNumber
-        car.carPrice = carVo.carPrice
-        car.carCompany = carVo.carCompany
-        car.carType = carVo.carType
-        car.buyer = null
-        car.soldOut = false
-
-        Boolean folder = new File("/home/prashantk/Documents/carobarimages/${car.carNumber}").exists()
-        if (folder == true) {
-            multiFiles.each {
+        def folder=new File("/home/prashantk/Documents/carobarimages/${car.carNumber}").exists()
+        if (folder == true)
+        {
+            multipleFileImages.each{
 
                 Picture picture = new Picture(car: car.id, pictureName: it.originalFilename)
                 picture.save(flush: true, failOnError: true)
@@ -185,211 +125,310 @@ class CarService {
 
             }
         }
-        car.save(flush: true, failOnError: true)
+
+
     }
 
-    void editGeneralSpecs(CarVo carVo, def carid, def year) {
-        Car car = Car.findById(carid)
-        CarBasics carBasics = CarBasics.findByCar(car)
-        carBasics.city = carVo.city
-        carBasics.distance = carVo.distance
-        carBasics.fuel = carVo.fuel
+    void insertGenSpecs(CarBasicsCommand carBasicsCommand,def id,def year){
+
+        CarBasics carBasics=new CarBasics(car: id,
+                                            city:carBasicsCommand.city,
+                                            distance: carBasicsCommand.distance,
+                                            fuel: carBasicsCommand.fuel,
+                                            year: year )
+        carBasics.save(flush: true,failOnError: true)
+    }
+
+    void insertEngineSpecs(CarEngineCommand carEngineCommand,def id){
+
+      CarEngineTransmission carEngineTransmission=new CarEngineTransmission(acceleration:carEngineCommand.acceleration,
+                                                    topSpeed:carEngineCommand.topSpeed,
+                                                    engineDescription:carEngineCommand.engineDescription,
+                                                    cylinders:carEngineCommand.cylinders,
+                                                    maxPower:carEngineCommand.maxPower,
+                                                    maxTorque: carEngineCommand.maxTorque,
+                                                    car: id)
+        carEngineTransmission.save(flush: true,failOnError: true)
+    }
+
+    void insertCapacity(CarCapacityCommand carCapacityCommand, def id){
+
+        CarCapacity carCapacity=new CarCapacity(fuelCapacity: carCapacityCommand.fuelCapacity,
+                                height: carCapacityCommand.height,
+                                length: carCapacityCommand.length,
+                                seatCapacity: carCapacityCommand.seatCapacity,
+                                tyreType: carCapacityCommand.tyreType,
+                                weight: carCapacityCommand.weight,
+                                wheelSize: carCapacityCommand.wheelSize,
+                                width: carCapacityCommand.width,
+                                car: id)
+        carCapacity.save(flush: true,failOnError: true)
+
+    }
+
+    void insertComfort(CarComfortCommand carComfortCommand,def id){
+
+        CarComfort carComfort=new CarComfort(ac: carComfortCommand.ac,
+                                poweSteering:carComfortCommand.poweSteering,
+                                powerButton:carComfortCommand.powerButton,
+                                transmissionType:carComfortCommand.transmissionType,
+                                navigationSystem: carComfortCommand.navigationSystem,
+                                audioSystem: carComfortCommand.audioSystem,
+                                bluetooth: carComfortCommand.bluetooth,
+                                car: id)
+        carComfort.save(flush: true,failOnError: true)
+
+
+    }
+    void insertSafety(CarSafetyCommand carSafetyCommand,def id){
+
+        CarSafety carSafety=new CarSafety(antiLockBreaking:carSafetyCommand.antiLockBreaking,
+                            parkingSensor: carSafetyCommand.parkingSensor,
+                            centralLocking: carSafetyCommand.centralLocking,
+                            airBags: carSafetyCommand.airBags,
+                            crashSensor: carSafetyCommand.crashSensor,
+                            antiTheftAlarm: carSafetyCommand.antiTheftAlarm,
+                            powerDoorLocks: carSafetyCommand.powerDoorLocks,
+                            rearCameras: carSafetyCommand.powerDoorLocks,
+                            car: id)
+        carSafety.save(flush: true,failOnError: true)
+
+    }
+
+    void editCarDetails(CarVo carVo,def multiFiles,def id){
+
+
+        Car car=Car.findById(id)
+
+        car.carTitle=carVo.carTitle
+        car.carNumber=carVo.carNumber
+        car.carPrice=carVo.carPrice
+        car.carCompany=carVo.carCompany
+        car.carType=carVo.carType
+        car.buyer=null
+        car.soldOut=false
+
+        Boolean folder=new File("/home/prashantk/Documents/carobarimages/${car.carNumber}").exists()
+        if (folder == true)
+        {
+            multiFiles.each{
+
+                Picture picture = new Picture(car: car.id, pictureName: it.originalFilename)
+                picture.save(flush: true, failOnError: true)
+                it.transferTo(new File("${grailsApplication.config.imagePath}/${car.carNumber}/${it.originalFilename}"))
+
+            }
+        }
+        car.save(flush: true,failOnError: true)
+    }
+
+    void editGeneralSpecs(CarVo carVo,def carid,def year){
+        Car car=Car.findById(carid)
+        CarBasics carBasics=CarBasics.findByCar(car)
+        carBasics.city=carVo.city
+        carBasics.distance=carVo.distance
+        carBasics.fuel=carVo.fuel
         int result = Integer.parseInt(year);
-        carBasics.year = result
+        carBasics.year=result
 
-        carBasics.save(flush: true, failOnError: true)
-
-    }
-
-    void editEngineDetails(CarVo carVo, def carid) {
-        Car car = Car.findById(carid)
-        CarEngineTransmission carEngineTransmission = CarEngineTransmission.findByCar(car)
-        carEngineTransmission.topSpeed = carVo.topSpeed
-        carEngineTransmission.acceleration = carVo.acceleration
-        carEngineTransmission.engineDescription = carVo.engineDescription
-        carEngineTransmission.cylinders = carVo.cylinders
-        carEngineTransmission.maxPower = carVo.maxPower
-        carEngineTransmission.maxTorque = carVo.maxPower
-
-        carEngineTransmission.save(flush: true, failOnError: true)
-    }
-
-    void editCapacityDetails(CarVo carVo, def carid) {
-        Car car = Car.findById(carid)
-        CarCapacity carCapacity = CarCapacity.findByCar(car)
-        carCapacity.fuelCapacity = carVo.fuelCapacity
-        carCapacity.height = carVo.height
-        carCapacity.length = carVo.length
-        carCapacity.seatCapacity = carVo.seatCapacity
-        carCapacity.tyreType = carVo.tyreType
-        carCapacity.weight = carVo.weight
-        carCapacity.wheelSize = carVo.wheelSize
-        carCapacity.width = carVo.width
-
-        carCapacity.save(flush: true, failOnError: true)
-    }
-
-    void editComfortDetails(CarVo carVo, def carid) {
-        Car car = Car.findById(carid)
-        CarComfort carComfort = CarComfort.findByCar(car)
-        carComfort.ac = carVo.ac
-        carComfort.audioSystem = carVo.audioSystem
-        carComfort.bluetooth = carVo.bluetooth
-        carComfort.navigationSystem = carVo.navigationSystem
-        carComfort.poweSteering = carVo.poweSteering
-        carComfort.powerButton = carVo.powerButton
-        carComfort.transmissionType = carVo.transmissionType
-
-        carComfort.save(flush: true, failOnError: true)
-
+        carBasics.save(flush: true,failOnError: true)
 
     }
 
-    void editSafetyDetails(CarVo carVo, def carid) {
-        Car car = Car.findById(carid)
-        CarSafety carSafety = CarSafety.findByCar(car)
-        carSafety.antiLockBreaking = carVo.antiLockBreaking
-        carSafety.parkingSensor = carVo.parkingSensor
-        carSafety.centralLocking = carVo.centralLocking
-        carSafety.airBags = carVo.airBags
-        carSafety.crashSensor = carVo.crashSensor
-        carSafety.antiTheftAlarm = carVo.antiTheftAlarm
-        carSafety.powerDoorLocks = carVo.powerDoorLocks
-        carSafety.rearCameras = carVo.rearCameras
+    void editEngineDetails(CarVo carVo,def carid){
+        Car car=Car.findById(carid)
+        CarEngineTransmission carEngineTransmission=CarEngineTransmission.findByCar(car)
+        carEngineTransmission.topSpeed=carVo.topSpeed
+        carEngineTransmission.acceleration=carVo.acceleration
+        carEngineTransmission.engineDescription=carVo.engineDescription
+        carEngineTransmission.cylinders=carVo.cylinders
+        carEngineTransmission.maxPower=carVo.maxPower
+        carEngineTransmission.maxTorque=carVo.maxPower
 
-        carSafety.save(flush: true, failOnError: true)
+        carEngineTransmission.save(flush: true,failOnError: true)
     }
 
-    def addToWishlist(User user, Car car) {
-        Wishlist wishlist = Wishlist.findByUserAndCar(user, car)
+    void editCapacityDetails(CarVo carVo,def carid){
+        Car car=Car.findById(carid)
+        CarCapacity carCapacity=CarCapacity.findByCar(car)
+        carCapacity.fuelCapacity=carVo.fuelCapacity
+        carCapacity.height=carVo.height
+        carCapacity.length=carVo.length
+        carCapacity.seatCapacity=carVo.seatCapacity
+        carCapacity.tyreType=carVo.tyreType
+        carCapacity.weight=carVo.weight
+        carCapacity.wheelSize=carVo.wheelSize
+        carCapacity.width=carVo.width
+
+        carCapacity.save(flush: true,failOnError: true)
+    }
+
+    void editComfortDetails(CarVo carVo,def carid){
+        Car car=Car.findById(carid)
+        CarComfort carComfort=CarComfort.findByCar(car)
+        carComfort.ac=carVo.ac
+        carComfort.audioSystem=carVo.audioSystem
+        carComfort.bluetooth=carVo.bluetooth
+        carComfort.navigationSystem=carVo.navigationSystem
+        carComfort.poweSteering=carVo.poweSteering
+        carComfort.powerButton=carVo.powerButton
+        carComfort.transmissionType=carVo.transmissionType
+
+       carComfort.save(flush: true,failOnError: true)
+
+
+    }
+    void editSafetyDetails(CarVo carVo,def carid){
+        Car car=Car.findById(carid)
+        CarSafety carSafety=CarSafety.findByCar(car)
+        carSafety.antiLockBreaking=carVo.antiLockBreaking
+        carSafety.parkingSensor=carVo.parkingSensor
+        carSafety.centralLocking=carVo.centralLocking
+        carSafety.airBags=carVo.airBags
+        carSafety.crashSensor=carVo.crashSensor
+        carSafety.antiTheftAlarm=carVo.antiTheftAlarm
+        carSafety.powerDoorLocks=carVo.powerDoorLocks
+        carSafety.rearCameras=carVo.rearCameras
+
+        carSafety.save(flush: true,failOnError: true)
+    }
+
+    def addToWishlist(User user,Car car){
+        Wishlist wishlist=Wishlist.findByUserAndCar(user,car)
 
         if (wishlist) {
             return "exists"
-        } else {
+        }else{
 
-            Wishlist wishlist1 = new Wishlist(user: user, car: car)
-            wishlist1.save(flush: true, failOnError: true)
+            Wishlist wishlist1=new Wishlist(user: user,car: car)
+            wishlist1.save(flush: true,failOnError: true)
 
-            String content = groovyPageRenderer.render(view: "/home/interestedUser", model: [user: user, car: car])
-            /*asynchronousMailService.sendMail {
+            String content=groovyPageRenderer.render(view: "/home/interestedUser",model: [user:user,car: car])
+            asynchronousMailService.sendMail {
                 to 'rhlsngh994@gmail.com'   // def email=user.email
                 subject 'carobarTest';
 
                 html content
-            }*/
+            }
             return "success"
         }
     }
 
-    Integer countWishlist(User user) {
-        Integer wishlist = Wishlist.countByUser(user);
+    Integer countWishlist(User user){
+        Integer wishlist=Wishlist.countByUser(user);
         return wishlist
     }
 
-    List<Car> wishlist(User user) {
-        List<Wishlist> wishlist = Wishlist.findAllByUser(user)
-        def car = [];
-        int i = 0
+    List<Car> wishlist(User user){
+        List<Wishlist> wishlist=Wishlist.findAllByUser(user)
+        def car=[];
+        int i=0
         wishlist.each {
 
-            def carId = it.car.getId()
-            car[i] = Car.findById(carId)
+            def carId=it.car.getId()
+            car[i]= Car.findById(carId)
             i++;
         }
         return car
     }
 
 
-    List<Car> listingsOfCars(CarSearchCO carSearchCO) {
+    List<Car> listingsOfCars(CarSearchCO carSearchCO){
 
 
         List<Car> cars = null;
-        List<String> list = null;
-        List<String> list1 = null
-        List<CarCompany> carCompanies = null
-        List<FuelType> fuelType = null
+        List<String> list=null;
+        List<String> list1=null
+        List<CarCompany> carCompanies=null
+        List<FuelType> fuelType=null
 
 
-        if (carSearchCO.fuel) {
+        if(carSearchCO.fuel){
 
-            String[] fuelInArray = carSearchCO.fuel.split(",");
-            list1 = Arrays.asList(fuelInArray);
-            fuelType = list1.collect { FuelType.valueOf(it) }
+            String[] fuelInArray=carSearchCO.fuel.split(",");
+            list1=Arrays.asList(fuelInArray);
+            fuelType=list1.collect{FuelType.valueOf(it)}
             fuelType.each {
                 println(it)
             }
         }
-        if (carSearchCO.company) {
+        if (carSearchCO.company){
 
-            String[] words = carSearchCO.company.split(",");
-            list = Arrays.asList(words);
-            carCompanies = list.collect { CarCompany.valueOf(it) }
+                String[] words=carSearchCO.company.split(",");
+                list = Arrays.asList(words);
+                carCompanies=list.collect {CarCompany.valueOf(it)}
 
         }
 
-        Integer lowestPrice = carSearchCO.min * 100000
-        Integer highestPrice = carSearchCO.max * 100000;
+        Integer lowestPrice=carSearchCO.min*100000
+        Integer highestPrice=carSearchCO.max*100000;
 
 
-        cars = Car.createCriteria().list {
-            createAlias('carBasics', 'cb')
-            if (lowestPrice && highestPrice) {
-                if (carSearchCO.company) {
-                    if (carSearchCO.startYear != 0 || carSearchCO.endYear != 0) {
+        cars=Car.createCriteria().list {
+            createAlias('carBasics','cb')
+            if(lowestPrice && highestPrice){
+                if (carSearchCO.company){
+                    if(carSearchCO.startYear!=0 || carSearchCO.endYear!=0){
 
-                        ge('carPrice', lowestPrice)
-                        le('carPrice', highestPrice)
-                        'in'('carCompany', carCompanies)
-                        ge('cb.year', carSearchCO.startYear)
-                        le('cb.year', carSearchCO.endYear)
+                        ge('carPrice',lowestPrice)
+                        le('carPrice',highestPrice)
+                        'in'('carCompany',carCompanies)
+                        ge('cb.year',carSearchCO.startYear)
+                        le('cb.year',carSearchCO.endYear)
 
-                    } else {
+                    }else {
 
-                        ge('carPrice', lowestPrice)
-                        le('carPrice', highestPrice)
-                        'in'('carCompany', carCompanies)
+                        ge('carPrice',lowestPrice)
+                        le('carPrice',highestPrice)
+                        'in'('carCompany',carCompanies)
                     }
-                } else if (carSearchCO.startYear != 0 || carSearchCO.endYear != 0) {
-
-                    ge('carPrice', lowestPrice)
-                    le('carPrice', highestPrice)
-                    ge('cb.year', carSearchCO.startYear)
-                    le('cb.year', carSearchCO.endYear)
-                } else {
-
-                    ge('carPrice', lowestPrice)
-                    le('carPrice', highestPrice)
                 }
-            } else if (carSearchCO.company) {
+                else if(carSearchCO.startYear!=0 || carSearchCO.endYear!=0) {
 
-                if (carSearchCO.startYear != 0 || carSearchCO.endYear != 0) {
-                    if (lowestPrice != 000000 || highestPrice != 000000) {
+                    ge('carPrice',lowestPrice)
+                    le('carPrice',highestPrice)
+                    ge('cb.year',carSearchCO.startYear)
+                    le('cb.year',carSearchCO.endYear)
+                }
+                else {
 
-                        ge('carPrice', lowestPrice)
-                        le('carPrice', highestPrice)
-                        'in'('carCompany', carCompanies)
-                        ge('cb.year', carSearchCO.startYear)
-                        le('cb.year', carSearchCO.endYear)
+                    ge('carPrice',lowestPrice)
+                    le('carPrice',highestPrice)
+                }
+            }
+            else if(carSearchCO.company){
 
-                    } else {
+                if(carSearchCO.startYear!=0 || carSearchCO.endYear!=0){
+                    if (lowestPrice!=000000 || highestPrice!=000000){
 
-                        'in'('carCompany', carCompanies)
-                        ge('cb.year', carSearchCO.startYear)
-                        le('cb.year', carSearchCO.endYear)
+                        ge('carPrice',lowestPrice)
+                        le('carPrice',highestPrice)
+                        'in'('carCompany',carCompanies)
+                        ge('cb.year',carSearchCO.startYear)
+                        le('cb.year',carSearchCO.endYear)
+
+                    }else {
+
+                        'in'('carCompany',carCompanies)
+                        ge('cb.year',carSearchCO.startYear)
+                        le('cb.year',carSearchCO.endYear)
                     }
-                } else {
+                }else {
 
-                    'in'('carCompany', carCompanies)
+                    'in'('carCompany',carCompanies)
                 }
-            } else if (carSearchCO.startYear != 0 || carSearchCO.endYear != 0) {
+            }
+            else if (carSearchCO.startYear!=0 || carSearchCO.endYear!=0){
 
                 if (carSearchCO.fuel) {
                     ge('cb.year', carSearchCO.startYear)
                     le('cb.year', carSearchCO.endYear)
-                    'in'('cb.fuel', fuelType)
+                    'in'('cb.fuel',fuelType)
                 }
 
-            } else {
+            }
+
+            else {
 
             }
         }
@@ -397,171 +436,73 @@ class CarService {
         return cars
     }
 
-    List<Car> compareCar(String carId) {
-        String[] carIdStringArray = carId.split(",")
-        Long[] carIdLongArray = new Long[carIdStringArray.length]
-        int i = 0;
+    List<Car> compareCar(String carId){
+        String[] carIdStringArray=carId.split(",")
+        Long[] carIdLongArray=new Long[carIdStringArray.length]
+        int i=0;
         carIdStringArray.each {
-            carIdLongArray[i] = Long.parseLong(it)
+            carIdLongArray[i]=Long.parseLong(it)
             i++;
         }
-        List<Long> carList = Arrays.asList(carIdLongArray)
-        List<Car> cars = Car.createCriteria().list {
+        List<Long> carList=Arrays.asList(carIdLongArray)
+        List<Car> cars=Car.createCriteria().list {
 
-            'in'('id', carList)
+            'in'('id',carList)
         }
 
-        return cars
+       return cars
 
     }
-
     Integer viewCount(String carId) {
 
-        Car car1 = Car.findById(carId.toLong())
-        Integer count = ViewCount.countByCar(car1)
-        return count
+         Car car1 = Car.findById(carId.toLong())
+         Integer count=ViewCount.countByCar(car1)
+         return count
 
     }
 
-    List<Message> conversations(Long threadMessage, User user) {
-        ThreadMessage threadMessage1 = ThreadMessage.findById(threadMessage)
-        List<Message> messageList = Message.findAllByThreadMessage(threadMessage1)
-        List<Message> seenMessageList = Message.findAllByThreadMessageAndReceiver(threadMessage1, user)
+    List<Message> conversations(Long threadMessage,User user){
+        ThreadMessage threadMessage1=ThreadMessage.findById(threadMessage)
+        List<Message> messageList=Message.findAllByThreadMessage(threadMessage1)
+        List<Message> seenMessageList=Message.findAllByThreadMessageAndReceiver(threadMessage1,user)
         seenMessageList.each {
-            it.seen = true;
+            it.seen=true;
             it.save(failOnError: true);
         }
         return messageList
     }
 
-    Integer countUnseenMessages(User user, Long data) {
-        List<Message> seenList = Message.findAllBySeenAndReceiverAndReply(false, user, data)
-        Integer count = Message.countBySeenAndReceiverAndReply(false, user, data)
+    Integer countUnseenMessages(User user,Long data){
+        List<Message> seenList=Message.findAllBySeenAndReceiverAndReply(false,user,data)
+        Integer count=Message.countBySeenAndReceiverAndReply(false,user,data)
         return count
     }
+    void deleteMessage(Long id){
+        ThreadMessage threadMessage=ThreadMessage.findById(id)
+        Message message=Message.findByThreadMessage(threadMessage)
 
-    void deleteMessage(Long id) {
-        ThreadMessage threadMessage = ThreadMessage.findById(id)
-        Message message = Message.findByThreadMessage(threadMessage)
-
-        if (SpringSecurityUtils.ifAllGranted("Buyer_ROLE")) {
-            message.senderDelete = true;
+        if(SpringSecurityUtils.ifAllGranted("Buyer_ROLE")){
+            message.senderDelete=true;
             message.save(failOnError: true)
-        } else {
-            message.receiverDelete = true;
+        }else {
+            message.receiverDelete=true;
             message.save(failOnError: true)
         }
     }
 
-    void buyerReplyMessage(User user, String tm, String text) {
+    void buyerReplyMessage(User user,String tm,String text){
         ThreadMessage threadMessage = ThreadMessage.findById(tm.toLong())
         Message message = Message.findByThreadMessage(threadMessage)
-        String number = message.carImage.toString();
-        if (SpringSecurityUtils.ifAllGranted("Buyer_ROLE")) {
+        String number=message.carImage.toString();
+        if(SpringSecurityUtils.ifAllGranted("Buyer_ROLE")) {
 
-            Message message1 = new Message(receiver: message.receiver, sender: user, message: text, threadMessage: threadMessage, date: new Date(), reply: threadMessage.id, carImage: number, seen: false)
+            Message message1 = new Message(receiver: message.receiver, sender: user, message: text, threadMessage: threadMessage, date: new Date(), reply: threadMessage.id, carImage: number,seen: false)
             message1.save(failOnError: true)
 
-        } else {
+        }else {
 
-            Message message1 = new Message(receiver: message.sender, sender: user, message: text, threadMessage: threadMessage, date: new Date(), reply: threadMessage.id, carImage: number, seen: false)
+            Message message1 = new Message(receiver: message.sender, sender: user, message: text, threadMessage: threadMessage, date: new Date(), reply: threadMessage.id, carImage: number,seen: false)
             message1.save(failOnError: true)
         }
-    }
-
-    ResponseDTO addBasicDetails(CarCO carCO) {
-        ResponseDTO responseDTO = new ResponseDTO()
-        try {
-            Car car = new Car(
-                    title: carCO.title,
-                    number: carCO.number,
-                    type: carCO.carType,
-                    price: carCO.price,
-                    year: carCO.year,
-                    city: carCO.city,
-                    companyType: carCO.companyType,
-                    fuelType: carCO.fuelType,
-                    seller: springSecurityService.currentUser as User
-            )
-            car.save(failOnError: true)
-            responseDTO.setSuccessResponse(null, "")
-        } catch (ValidationException vex) {
-            log.error(vex.getMessage())
-        }
-        catch (Exception e) {
-            responseDTO.setFailureResponse(null)
-        }
-        return responseDTO
-    }
-
-    ResponseDTO addDimension(DimensionCO dimensionCO, User seller) {
-        ResponseDTO responseDTO = new ResponseDTO()
-        try {
-
-            Dimension dimension = new Dimension(
-                    length: dimensionCO.length,
-                    width: dimensionCO.width,
-                    height: dimensionCO.height,
-                    weight: dimensionCO.weight,
-                    groundClearance: dimensionCO.groundClearance,
-                    fuelCapacity: dimensionCO.fuelCapacity,
-                    seatCapacity: dimensionCO.seatCapacity,
-                    wheelBase: dimensionCO.wheelBase,
-                    car: fetchRecentIncompleteCar(seller)
-            )
-            dimension.save(failOnError: true)
-            responseDTO.setSuccessResponse(null, "")
-
-        } catch (Exception e) {
-            responseDTO.setFailureResponse("")
-        }
-        return responseDTO
-    }
-
-    Car fetchRecentIncompleteCar(User seller) {
-        List<Car> carList = Car.createCriteria().listDistinct {
-            eq('isActive', true)
-            eq('isCompleted', false)
-            eq('seller', seller)
-            order('dateCreated', 'desc')
-        } as List<Car>
-        return carList ? carList.first() : null
-    }
-
-    ResponseDTO uploadImage(ImageCO imageCO) {
-        ResponseDTO responseDTO = new ResponseDTO()
-        try {
-            User seller = springSecurityService.currentUser as User
-            Car inCompletedCar = fetchRecentIncompleteCar(seller)
-            if (!inCompletedCar) {
-                responseDTO.setFailureResponse(MessageConstant.NO_CAR_FOUND)
-            } else {
-                List<Picture> pictureList = []
-                String folderPath = grailsApplication.config.grails.external.image.path
-                Boolean folder = new File("${folderPath}/${inCompletedCar.number}").exists()
-                if (folder) {
-                    imageCO.image1.transferTo(new File("${folderPath}/${inCompletedCar.number}/${imageCO.image1.originalFilename}"))
-                    /*imageCO.image2.transferTo(new File("${folderPath}/${inCompletedCar.number}/${imageCO.image2.originalFilename}"))
-                    imageCO.image3.transferTo(new File("${folderPath}/${inCompletedCar.number}/${imageCO.image3.originalFilename}"))
-                    imageCO.image4.transferTo(new File("${folderPath}/${inCompletedCar.number}/${imageCO.image4.originalFilename}"))*/
-                } else {
-
-                    boolean newFolder = new File("${folderPath}/${inCompletedCar.number}").mkdirs()
-                    imageCO.image1.transferTo(new File("${folderPath}/${inCompletedCar.number}/${imageCO.image1.originalFilename}"))
-                    /*imageCO.image1.transferTo(new File("${folderPath}/${inCompletedCar.number}/${imageCO.image1.originalFilename}"))
-                    imageCO.image1.transferTo(new File("${folderPath}/${inCompletedCar.number}/${imageCO.image1.originalFilename}"))
-                    imageCO.image1.transferTo(new File("${folderPath}/${inCompletedCar.number}/${imageCO.image1.originalFilename}"))*/
-                }
-                /*pictureList << new Picture(name: imageCO.image1.originalFilename, car: inCompletedCar)
-                pictureList << new Picture(name: imageCO.image2.originalFilename, car: inCompletedCar)
-                pictureList << new Picture(name: imageCO.image3.originalFilename, car: inCompletedCar)
-                pictureList << new Picture(name: imageCO.image4.originalFilename, car: inCompletedCar)*/
-                responseDTO.setSuccessResponse(null, "")
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace()
-        }
-        return responseDTO
     }
 }

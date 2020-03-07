@@ -1,66 +1,44 @@
 package com.carobar
 
+import commandObject.CarCompany
 
-import enums.CarType
-import enums.CompanyType
-import enums.FuelType
-import enums.States
 
 class Car {
 
-    String title
-    String number
-    CarType type
-    Double price
-    Integer year
-    States city
-
-    CompanyType companyType
-    FuelType fuelType
-
-    User seller
+    String carTitle
+    String carNumber
+    String carType
+    Integer carPrice
+    String carImage
+    User user
+    CarCompany carCompany
+    Boolean soldOut
     User buyer
-
-    Boolean isCompleted = false
-    Boolean isActive = true
-    Boolean isSold = false
-    Date dateCreated
-    Date lastUpdated
+    CarComfort carComfort
+    CarBasics carBasics
+    CarCapacity carCapacity
+    CarEngineTransmission carEngineTransmission
+    CarSafety carSafety
 
     static constraints = {
-        capacity nullable: true
-        comfort nullable: true
-        engine nullable: true
-        safety nullable: true
-        basic nullable: true
-        dimension nullable: true
+        carTitle nullable: false,blank: false
+        carNumber nullable: false,blank: false
+        carType nullable: false,blank: false
+        carPrice nullable: false,blank: false
+        carComfort nullable: true
+        carBasics nullable: true
+        carSafety nullable: true
+        carCapacity nullable: true
+        carEngineTransmission nullable: true
+        carImage nullable: false
         buyer nullable: true
-        seller nullable: true
-        city nullable: true
+
     }
 
-    static hasMany = [images: Picture]
+    static  hasMany = [pictures :Picture]
+    static hasOne = [carCapacity:CarCapacity,carComfort:CarComfort,carEngineTransmission:CarEngineTransmission,carSafety:CarSafety,carBasics:CarBasics]
+    static belongsTo = [user:User]
 
-    static hasOne = [
-            capacity : CarCapacity,
-            comfort  : CarComfort,
-            engine   : CarEngineTransmission,
-            safety   : CarSafety,
-            basic    : CarBasics,
-            dimension: Dimension
-    ]
 
-    static List<Car> findAllActiveCarList() {
-        List<Car> carList = createCriteria().listDistinct {
-            eq('isActive', true)
-        } as List<Car>
-        return carList ?: []
-    }
 
-    static List<Car> findAllActiveCarBySeller(User seller) {
-        List<Car> carList = createCriteria().listDistinct {
-            eq('seller', seller)
-        } as List<Car>
-        return carList ?: []
-    }
 }
