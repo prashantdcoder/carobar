@@ -14,13 +14,10 @@ import org.codehaus.groovy.grails.commons.GrailsApplication
 @Transactional
 class CarService {
     GrailsApplication grailsApplication
-//    AsynchronousMailService asynchronousMailService
 
     def groovyPageRenderer
 
     def springSecurityService
-
-    def grailsLinkGenerator
 
     def photoUpload(def file, String number, Integer price, String title, String type, def multiFiles, String carCompany, User user) {
         Car car = new Car()
