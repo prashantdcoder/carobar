@@ -3,66 +3,73 @@ package com.carobar
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 
-@EqualsAndHashCode(includes='username')
-@ToString(includes='username', includeNames=true, includePackage=false)
+@EqualsAndHashCode(includes = 'username')
+@ToString(includes = 'username', includeNames = true, includePackage = false)
 class User implements Serializable {
 
-	private static final long serialVersionUID = 1
+    private static final long serialVersionUID = 1
 
-	transient springSecurityService
+    transient springSecurityService
 
-	String username
-	String password
-	Integer number
-	String email
-	String city
+    String username
+    String password
+    Integer number
+    String email
+    String city
 
-	String uuid
-	boolean enabled = false
-	boolean accountExpired
-	boolean accountLocked
-	boolean passwordExpired
+    String uuid
+    boolean enabled = false
+    boolean accountExpired
+    boolean accountLocked
+    boolean passwordExpired
 
-	User(String username, String password) {
-		this()
-		this.username = username
-		this.password = password
-	}
+    User() {
 
-	Set<Role> getAuthorities() {
-		UserRole.findAllByUser(this)*.role
-	}
+    }
 
-	def beforeInsert() {
-		encodePassword()
-	}
+    User(String username, String password) {
+        this()
+        this.username = username
+        this.password = password
+    }
 
-	def beforeUpdate() {
-		if (isDirty('password')) {
-			encodePassword()
-		}
-	}
+    Set<Role> getAuthorities() {
+        UserRole.findAllByUser(this)*.role
+    }
 
-	protected void encodePassword() {
-		password = springSecurityService?.passwordEncoder ? springSecurityService.encodePassword(password) : password
-	}
+    def beforeInsert() {
+        encodePassword()
+    }
 
-	static transients = ['springSecurityService']
+    def beforeUpdate() {
+        if (isDirty('password')) {
+            encodePassword()
+        }
+    }
 
-	static constraints = {
-        username blank: false, unique: true,nullable: false
-        password blank: false
-        number nullable: false
-        city nullable: false
-        email nullable: false,email: true
-		uuid nullable: true,blank: true
+    protected void encodePassword() {
+        password = springSecurityService?.passwordEncoder ? springSecurityService.encodePassword(password) : password
+    }
 
+    static findByEmailOrUsername(String email, String username) {
+        User user = createCriteria().get {
+            or {
+                eq('username', username)
+                eq('email', email)
+            }
+        } as User
+        return user ?: null
+    }
 
+    static transients = ['springSecurityService']
 
-	}
-	static  hasMany = [car :Car,feedback:Feedback]
+    static constraints = {
+        username blank: false, unique: true
+        number nullable: true
+        city nullable: true
+        email nullable: false, email: true
+        uuid nullable: true
+    }
 
-	static mapping = {
-		password column: '`password`'
-	}
+    static hasMany = [feedback: Feedback]
 }

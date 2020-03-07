@@ -11,7 +11,7 @@
 //    grails.config.locations << "file:" + System.properties["${appName}.config.location"]
 // }
 
-imagePath = "/home/prashantk/Documents/carobarimages/"
+grails.external.image.path = "E:/Workspace/Grails Project/New Carobar/external"
 range1="1Lac-5Lac"
 range2="5Lac-10Lac"
 range3="10Lac-15Lac"
@@ -83,8 +83,8 @@ grails {
     mail {
         host = "smtp.gmail.com"
         port = 465
-        username = "rhlsngh994@gmail.com"
-        password = "elzardogmail"
+        username = ""
+        password = ""
         props = ["mail.smtp.auth":"true",
                  "mail.smtp.socketFactory.port":"465",
                  "mail.smtp.socketFactory.class":"javax.net.ssl.SSLSocketFactory",
