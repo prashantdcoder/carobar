@@ -1,15 +1,24 @@
-import groovy.util.logging.Slf4j
+import com.carobar.Role
+import com.carobar.User
+import com.carobar.UserRole
 
-@Slf4j
 class BootStrap {
-
-    def bootStrapService
 
     def init = { servletContext ->
 
-        bootStrapService.initRole()
-        bootStrapService.initUser()
-        bootStrapService.initCar()
+
+        if (!Role.findByAuthority('Buyer_ROLE'))
+        {
+            Role role=new Role(authority: 'Buyer_ROLE')
+            role.save(flush: true,failOnError: true)
+
+        }
+        if(!Role.findByAuthority('Seller_Role'))
+        {
+            Role role=new Role(authority: 'Seller_Role')
+            role.save(flush: true,failOnError: true)
+        }
+
     }
     def destroy = {
     }

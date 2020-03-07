@@ -86,7 +86,7 @@
         </div>
     </div>
 </sec:ifAnyGranted>
-<sec:ifAllGranted roles="ROLE_ADMIN">
+<sec:ifAllGranted roles="Admin_Role1">
     <div class="container">
         <h1>Feedback Posts</h1>
        <table class="table table-responsive">

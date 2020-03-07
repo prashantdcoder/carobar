@@ -3,14 +3,13 @@ package carvo
 import com.carobar.Car
 /*import com.google.common.collect.Constraints*/
 import commandObject.CarCompany
-import enums.FuelType
-import enums.States
-import grails.validation.Validateable
+import commandObject.FuelType
+import commandObject.States
 
 /**
  * Created by prashantk on 20/3/17.
  */
-@Validateable
+@grails.validation.Validateable
 class CarVo {
 
     String carTitle
