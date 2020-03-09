@@ -5,6 +5,8 @@ import commandObject.*
 import constants.MessageConstant
 import dto.ResponseDTO
 import enums.FuelType
+import exceptions.NoStackTraceException
+import grails.plugin.springsecurity.SpringSecurityService
 import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.transaction.Transactional
 import grails.validation.ValidationException
@@ -13,11 +15,12 @@ import org.codehaus.groovy.grails.commons.GrailsApplication
 
 @Transactional
 class CarService {
+
     GrailsApplication grailsApplication
 
     def groovyPageRenderer
 
-    def springSecurityService
+    SpringSecurityService springSecurityService
 
     def photoUpload(def file, String number, Integer price, String title, String type, def multiFiles, String carCompany, User user) {
         Car car = new Car()
@@ -466,27 +469,25 @@ class CarService {
         }
     }
 
-    ResponseDTO addBasicDetails(CarCO carCO) {
+    ResponseDTO addBasicDetails(CarCO carCO, Car inCompleteCar, User seller) throws NoStackTraceException {
         ResponseDTO responseDTO = new ResponseDTO()
         try {
-            Car car = new Car(
-                    title: carCO.title,
-                    number: carCO.number,
-                    type: carCO.carType,
-                    price: carCO.price,
-                    year: carCO.year,
-                    city: carCO.city,
-                    companyType: carCO.companyType,
-                    fuelType: carCO.fuelType,
-                    seller: springSecurityService.currentUser as User
-            )
-            car.save(failOnError: true)
+            Car car = inCompleteCar ?: new Car()
+            car.title = carCO.title
+            car.number = carCO.number
+            car.type = carCO.carType
+            car.price = carCO.price
+            car.year = carCO.year
+            car.city = carCO.city
+            car.companyType = carCO.companyType
+            car.fuelType = carCO.fuelType
+            car.seller = seller
             responseDTO.setSuccessResponse(null, "")
         } catch (ValidationException vex) {
             log.error(vex.getMessage())
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             responseDTO.setFailureResponse(null)
+            throw new NoStackTraceException(e.getMessage())
         }
         return responseDTO
     }
@@ -535,24 +536,14 @@ class CarService {
             } else {
                 List<Picture> pictureList = []
                 String folderPath = grailsApplication.config.grails.external.image.path
-                Boolean folder = new File("${folderPath}/${inCompletedCar.number}").exists()
-                if (folder) {
-                    imageCO.image1.transferTo(new File("${folderPath}/${inCompletedCar.number}/${imageCO.image1.originalFilename}"))
-                    /*imageCO.image2.transferTo(new File("${folderPath}/${inCompletedCar.number}/${imageCO.image2.originalFilename}"))
-                    imageCO.image3.transferTo(new File("${folderPath}/${inCompletedCar.number}/${imageCO.image3.originalFilename}"))
-                    imageCO.image4.transferTo(new File("${folderPath}/${inCompletedCar.number}/${imageCO.image4.originalFilename}"))*/
-                } else {
-
-                    boolean newFolder = new File("${folderPath}/${inCompletedCar.number}").mkdirs()
-                    imageCO.image1.transferTo(new File("${folderPath}/${inCompletedCar.number}/${imageCO.image1.originalFilename}"))
-                    /*imageCO.image1.transferTo(new File("${folderPath}/${inCompletedCar.number}/${imageCO.image1.originalFilename}"))
-                    imageCO.image1.transferTo(new File("${folderPath}/${inCompletedCar.number}/${imageCO.image1.originalFilename}"))
-                    imageCO.image1.transferTo(new File("${folderPath}/${inCompletedCar.number}/${imageCO.image1.originalFilename}"))*/
-                }
-                /*pictureList << new Picture(name: imageCO.image1.originalFilename, car: inCompletedCar)
+                imageCO?.image1?.transferTo(new File("${folderPath}/${inCompletedCar.number}/${imageCO.image1.originalFilename}"))
+                imageCO?.image2?.transferTo(new File("${folderPath}/${inCompletedCar.number}/${imageCO.image2.originalFilename}"))
+                imageCO?.image3?.transferTo(new File("${folderPath}/${inCompletedCar.number}/${imageCO.image3.originalFilename}"))
+                imageCO?.image4?.transferTo(new File("${folderPath}/${inCompletedCar.number}/${imageCO.image4.originalFilename}"))
+                pictureList << new Picture(name: imageCO.image1.originalFilename, car: inCompletedCar)
                 pictureList << new Picture(name: imageCO.image2.originalFilename, car: inCompletedCar)
                 pictureList << new Picture(name: imageCO.image3.originalFilename, car: inCompletedCar)
-                pictureList << new Picture(name: imageCO.image4.originalFilename, car: inCompletedCar)*/
+                pictureList << new Picture(name: imageCO.image4.originalFilename, car: inCompletedCar)
                 responseDTO.setSuccessResponse(null, "")
             }
 

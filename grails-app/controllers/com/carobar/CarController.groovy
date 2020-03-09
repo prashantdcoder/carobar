@@ -16,13 +16,23 @@ class CarController {
 
     @Secured(RoleConstant.ROLE_SELLER)
     def index(CarCO carCO) {
+        User seller = springSecurityService.currentUser as User
+        Car incompleteCar = carService.fetchRecentIncompleteCar(seller)
         if (!carCO.isAdded) {
-            render(view: 'index')
+            carCO.title = incompleteCar?.title
+            carCO.number = incompleteCar?.number
+            carCO.carType = incompleteCar?.type
+            carCO.fuelType = incompleteCar?.fuelType
+            carCO.companyType = incompleteCar?.companyType
+            carCO.price = incompleteCar?.price
+            carCO.city = incompleteCar?.city
+            carCO.id = incompleteCar.id
+            render(view: 'index', model: [carCO: carCO])
         } else {
             if (!carCO.validate()) {
                 render(view: 'index', model: [carCO: carCO])
             } else {
-                ResponseDTO responseDTO = carService.addBasicDetails(carCO)
+                ResponseDTO responseDTO = carService.addBasicDetails(carCO, incompleteCar, seller)
                 if (!responseDTO.status) {
                     render(view: 'index', model: [savingError: MessageConstant.BASIC_DETAILS_UNSAVED])
                 } else {
