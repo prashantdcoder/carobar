@@ -100,10 +100,8 @@
           <root url="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-web/3.2.9.RELEASE/spring-security-web-3.2.9.RELEASE.jar!/" />
           <root url="jar://$MAVEN_REPOSITORY$/javax/activation/activation/1.1/activation-1.1.jar!/" />
           <root url="jar://$MAVEN_REPOSITORY$/javax/mail/javax.mail-api/1.5.1/javax.mail-api-1.5.1.jar!/" />
-          <root url="jar://$MAVEN_REPOSITORY$/org/quartz-scheduler/quartz/2.2.1/quartz-2.2.1.jar!/" />
           <root url="jar://$MAVEN_REPOSITORY$/org/javassist/javassist/3.17.1-GA/javassist-3.17.1-GA.jar!/" />
           <root url="jar://C:/grails-2.4.4/lib/org.codehaus.gpars/gpars/jars/gpars-1.2.1.jar!/" />
-          <root url="jar://$MAVEN_REPOSITORY$/org/multiverse/multiverse-core/0.7.0/multiverse-core-0.7.0.jar!/" />
           <root url="jar://C:/grails-2.4.4/lib/org.codehaus.jsr166-mirror/jsr166y/jars/jsr166y-1.7.0.jar!/" />
           <root url="jar://C:/grails-2.4.4/lib/com.google.code.gson/gson/jars/gson-2.2.4.jar!/" />
           <root url="jar://C:/grails-2.4.4/dist/grails-plugin-databinding-2.4.4.jar!/" />
