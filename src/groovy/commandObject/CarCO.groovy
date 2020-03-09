@@ -8,6 +8,7 @@ import grails.validation.Validateable
 
 @Validateable
 class CarCO {
+    Long id
     String title
     String number
     CarType carType
@@ -20,6 +21,7 @@ class CarCO {
     FuelType fuelType
 
     static constraints = {
+        id nullable: true
         title nullable: false, blank: false
         number nullable: false, blank: false
         price nullable: false

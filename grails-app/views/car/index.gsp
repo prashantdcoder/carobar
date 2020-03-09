@@ -47,6 +47,7 @@
                           name="carType"
                           from="${CarType.values()}"
                           optionKey="key"
+                          optionValue="value"
                           noSelection="['': 'Select type']"
                           value="key"/>
             </div>
@@ -58,7 +59,7 @@
                           from="${FuelType.values()}"
                           noSelection="['': 'Select Fuel']"
                           optionKey="key"
-                          value="key"/>
+                          optionValue="value"/>
                 <span><g:fieldError bean="${carCO}" field="fuelType"/></span>
             </div>
         </div>
@@ -70,6 +71,7 @@
                           name="companyType"
                           from="${CompanyType.values()}"
                           optionKey="key"
+                          optionValue="value"
                           noSelection="['': 'Select Company']"
                           value="key"/>
                 <span><g:fieldError bean="${carCO}" field="companyType"/></span>
