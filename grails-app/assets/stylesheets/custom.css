@@ -79,6 +79,23 @@ Time: 12:17 AM
     color: white;
 }
 
+/*================seller dashboard=====================*/
+.display_only_flex {
+    display: flex;
+}
+
+.float_right {
+    float: right;
+}
+
+.logout_dropdown {
+    position: absolute;
+    will-change: transform;
+    transform: translate3d(18px, 45px, 0px) !important;
+    top: 11px !important;
+    left: 0px !important;
+}
+
 /*====================register=======================*/
 .register_wrap {
     display: flex;
