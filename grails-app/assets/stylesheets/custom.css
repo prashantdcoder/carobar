@@ -66,30 +66,17 @@ Time: 12:17 AM
 }
 
 /*=================login=======================*/
-.login_left_panel {
-    border-radius: 4px;
-    height: 340px;
-    margin-bottom: 44px;
+.remember_me_label {
+    padding: 3px 24px;
 }
 
-.login_text_field {
-    border: 0 solid transparent;
-    border-bottom: 1px solid #dddddd;
-    border-radius: 0;
+.submit_arrow {
+    right: 0;
+    left: 83px;
 }
 
-.login_button {
-    border-radius: 0 !important;
-    padding: 23px !important;
-}
-
-.login_button:hover {
-    opacity: 0.8 !important;
+.submit_hover:hover {
     color: white;
-}
-
-.error_color {
-    color: #b0272d;
 }
 
 /*====================register=======================*/
