@@ -96,6 +96,11 @@ Time: 12:17 AM
     left: 0px !important;
 }
 
+.blue_btn {
+    background: #4236f9;
+    border: #4236f9;
+}
+
 /*====================register=======================*/
 .register_wrap {
     display: flex;

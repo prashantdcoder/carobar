@@ -13,36 +13,11 @@
 </head>
 
 <body>
-<div id="preloader">
-    <div class="loader"></div>
-</div>
+
+<g:render template="templates/loader"/>
+<g:render template="templates/leftPanel"/>
 
 <div class="page-container">
-    <!-- sidebar menu area start -->
-    <div class="sidebar-menu">
-        <div class="sidebar-header">
-            <div class="logo">
-                <a href="#">CaroBar</a>
-            </div>
-        </div>
-
-        <div class="main-menu">
-            <div class="menu-inner">
-                <nav>
-                    <ul class="metismenu" id="menu">
-                        <li class="active">
-                            <a href="javascript:void(0)"
-                               aria-expanded="true">
-                                <i class="ti-dashboard"></i><span>dashboard</span></a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-        </div>
-    </div>
-
-    <!-- sidebar menu area end -->
-    <!-- main content area start -->
     <div class="main-content">
         <div class="header-area">
             <div class="row align-items-center">
@@ -226,7 +201,7 @@
                 </div>
             </div>
         </div>
-
+        <!-- page title area start -->
         <div class="page-title-area">
             <div class="row align-items-center">
                 <div class="col-sm-6">
@@ -242,7 +217,7 @@
                     <div class="user-profile pull-right">
                         <img class="avatar user-thumb" src="${assetPath(src: 'avatar/avatar.png')}" alt="avatar">
                         <h4 class="user-name dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                            Kumkum Rai
+                            ${username}
                             <i class="ti-angle-down"></i></h4>
 
                         <div class="dropdown-menu logout_dropdown" x-placement="bottom-start">
@@ -254,6 +229,8 @@
                 </div>
             </div>
         </div>
+        <!-- page title area end -->
+        <g:render template="templates/inCompleteCar" model="[carList: carList]"/>
     </div>
 
 </div>

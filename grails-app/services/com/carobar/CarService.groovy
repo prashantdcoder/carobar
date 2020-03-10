@@ -526,6 +526,16 @@ class CarService {
         return carList ? carList.first() : null
     }
 
+    List<Car> fetchIncompleteCarList(User seller) {
+        List<Car> carList = Car.createCriteria().listDistinct {
+            eq('isActive', true)
+            eq('isCompleted', false)
+            eq('seller', seller)
+            order('dateCreated', 'desc')
+        } as List<Car>
+        return carList ?: []
+    }
+
     ResponseDTO uploadImage(ImageCO imageCO) {
         ResponseDTO responseDTO = new ResponseDTO()
         try {
