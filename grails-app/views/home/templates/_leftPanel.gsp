@@ -16,6 +16,14 @@
                            aria-expanded="true">
                             <i class="ti-dashboard"></i><span>dashboard</span></a>
                     </li>
+
+                    <li>
+                        <a href="javascript:void(0)" aria-expanded="true"><i class="ti-car"></i><span>Car</span></a>
+                        <ul class="collapse">
+                            <li><a href="#"><i class="ti-plus"></i><span>Add</span></a></li>
+                            <li><a href="#"><i class="ti-pencil"></i><span>Edit</span></a></li>
+                        </ul>
+                    </li>
                 </ul>
             </nav>
         </div>

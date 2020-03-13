@@ -21,7 +21,6 @@
     <asset:link rel="stylesheet" href="slicknav.min.css"/>
     <asset:link rel="stylesheet" href="typography.css"/>
     <asset:link rel="stylesheet" href="default-css.css"/>
-    <asset:link rel="stylesheet" href="custom.css"/>
     <asset:link rel="stylesheet" href="styles.css"/>
     <asset:link rel="stylesheet" href="responsive.css"/>
     <asset:link rel="stylesheet" href="application.css"/>
@@ -48,3 +47,4 @@
 <asset:javascript src="plugins.js"/>
 <asset:javascript src="scripts.js"/>
 <asset:javascript src="modernizr-2.8.3.min.js"/>
+<asset:javascript src="custom.js"/>

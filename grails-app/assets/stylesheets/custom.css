@@ -80,6 +80,10 @@ Time: 12:17 AM
 }
 
 /*================seller dashboard=====================*/
+.slide_toggle {
+    display: none;
+}
+
 .display_only_flex {
     display: flex;
 }
