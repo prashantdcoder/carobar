@@ -1,7 +1,9 @@
 <div class="sidebar-menu">
     <div class="sidebar-header">
         <div class="logo">
-            <a href="#">CaroBar</a>
+            <a href="#">
+                <img src="${resource(dir: 'images', file: 'logo.png')}">
+            </a>
         </div>
     </div>
 
