@@ -8,7 +8,7 @@ class UrlMappings {
         }
 
         "/"(view: "/home")
-        "/car-basic"(controller: 'car', action: 'index')
+        "/car/basic"(controller: 'car', action: 'index')
         "/car-capacity"(controller: 'car', action: 'dimension')
         "/car-picture"(controller: 'car', action: 'uploadImage')
         "500"(view: '/error')

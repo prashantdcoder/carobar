@@ -12,15 +12,17 @@
             <nav>
                 <ul class="metismenu" id="menu">
                     <li class="active">
-                        <a href="javascript:void(0)"
-                           aria-expanded="true">
-                            <i class="ti-dashboard"></i><span>dashboard</span></a>
+                        <g:link controller="home" action="index">
+                            <i class="ti-dashboard"></i><span>dashb--oard</span></a>
+                        </g:link>
                     </li>
 
                     <li>
                         <a href="javascript:void(0)" aria-expanded="true"><i class="ti-car"></i><span>Car</span></a>
                         <ul class="collapse">
-                            <li><a href="#"><i class="ti-plus"></i><span>Add</span></a></li>
+                            <li>
+                                <g:link controller="car" action="index"><i class="ti-plus"></i><span>Add</span></g:link>
+                            </li>
                             <li><a href="#"><i class="ti-pencil"></i><span>Edit</span></a></li>
                         </ul>
                     </li>

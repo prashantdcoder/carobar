@@ -17,6 +17,8 @@ class CarController {
     @Secured(RoleConstant.ROLE_SELLER)
     def index(CarCO carCO) {
         User seller = springSecurityService.currentUser as User
+        render(view: 'index', model: [username: seller.username])
+        /*User seller = springSecurityService.currentUser as User
         Car incompleteCar = carService.fetchRecentIncompleteCar(seller)
         if (!carCO.isAdded) {
             carCO.title = incompleteCar?.title
@@ -39,7 +41,7 @@ class CarController {
                     redirect(controller: 'car', action: 'dimension')
                 }
             }
-        }
+        }*/
     }
 
     @Secured(RoleConstant.ROLE_SELLER)

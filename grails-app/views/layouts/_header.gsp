@@ -1,79 +1,182 @@
-<header class="main_menu home_menu">
-    <div class="container-fluid">
-        <div class="row align-items-center justify-content-center">
-            <div class="col-lg-11">
-                <nav class="navbar navbar-expand-lg navbar-light">
-                    <a class="navbar-brand width_20_percent" href="#">
-                        <img src="${resource(dir: 'images', file: 'logo.png')}" alt="logo">
-                    </a>
-                    <button class="navbar-toggler" type="button" data-toggle="collapse"
-                            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                            aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="menu_icon"><i class="fas fa-bars"></i></span>
-                    </button>
+<div class="header-area">
+    <div class="row align-items-center">
+        <div class="col-md-6 col-sm-8 clearfix display_only_flex">
+            <div class="nav-btn pull-left" id="leftSlider">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
 
-                    <div class="collapse navbar-collapse main-menu-item" id="navbarSupportedContent">
-                        <ul class="navbar-nav">
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Home</a>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown_1"
-                                   role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Shop
-                                </a>
-
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdown_1">
-                                    <a class="dropdown-item" href="#">shop category</a>
-                                    <a class="dropdown-item" href="#">product details</a>
-
-                                </div>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link" href="#" id="navbarDropdown_3"
-                                   role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    pages
-                                </a>
-                            </li>
-
-                            <li class="nav-item dropdown">
-                                <a class="nav-link" href="#" id="navbarDropdown_2"
-                                   role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    blog
-                                </a>
-                            </li>
-
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Contact</a>
-                            </li>
-
-                            <sec:ifAnyGranted roles="ROLE_SELLER">
-                                <li class="nav-item">
-                                    <g:link class="nav-link" controller="car" action="index">Add</g:link>
-                                </li>
-                            </sec:ifAnyGranted>
-
-                            <sec:ifLoggedIn>
-                                <li class="nav-item">
-                                    <form name="submitForm" method="POST" action="${createLink(controller: 'logout')}">
-                                        <a class="nav-link" href="javascript:document.submitForm.submit()">logout</a>
-                                    </form>
-                                </li>
-                            </sec:ifLoggedIn>
-                        </ul>
-                    </div>
-
-                    <div class="hearer_icon d-flex">
-                        <div class="dropdown cart">
-                            <a class="dropdown-toggle" href="#" id="navbarDropdown3" role="button"
-                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="ti-bag"></i>
-                            </a>
-                        </div>
-                        <a id="search_1" href="javascript:void(0)"><i class="ti-search"></i></a>
-                    </div>
-                </nav>
+            <div class="search-box pull-left">
+                <form action="#">
+                    <input type="text" name="search" placeholder="Search" required>
+                    <i class="ti-search"></i>
+                </form>
             </div>
         </div>
+
+        <div class="col-md-6 col-sm-4 clearfix">
+            <ul class="notification-area float_right">
+                <li id="full-view-exit"><i class="ti-zoom-out"></i></li>
+                <li class="dropdown">
+                    <i class="ti-bell dropdown-toggle" data-toggle="dropdown">
+                        <span>2</span>
+                    </i>
+
+                    %{--<div class="dropdown-menu bell-notify-box notify-box">
+                        <span class="notify-title">You have 3 new notifications <a href="#">view all</a></span>
+
+                        <div class="nofity-list">
+                            <a href="#" class="notify-item">
+                                <div class="notify-thumb"><i class="ti-key btn-danger"></i></div>
+
+                                <div class="notify-text">
+                                    <p>You have Changed Your Password</p>
+                                    <span>Just Now</span>
+                                </div>
+                            </a>
+                            <a href="#" class="notify-item">
+                                <div class="notify-thumb"><i class="ti-comments-smiley btn-info"></i></div>
+
+                                <div class="notify-text">
+                                    <p>New Commetns On Post</p>
+                                    <span>30 Seconds ago</span>
+                                </div>
+                            </a>
+                            <a href="#" class="notify-item">
+                                <div class="notify-thumb"><i class="ti-key btn-primary"></i></div>
+
+                                <div class="notify-text">
+                                    <p>Some special like you</p>
+                                    <span>Just Now</span>
+                                </div>
+                            </a>
+                            <a href="#" class="notify-item">
+                                <div class="notify-thumb"><i class="ti-comments-smiley btn-info"></i></div>
+
+                                <div class="notify-text">
+                                    <p>New Commetns On Post</p>
+                                    <span>30 Seconds ago</span>
+                                </div>
+                            </a>
+                            <a href="#" class="notify-item">
+                                <div class="notify-thumb"><i class="ti-key btn-primary"></i></div>
+
+                                <div class="notify-text">
+                                    <p>Some special like you</p>
+                                    <span>Just Now</span>
+                                </div>
+                            </a>
+                            <a href="#" class="notify-item">
+                                <div class="notify-thumb"><i class="ti-key btn-danger"></i></div>
+
+                                <div class="notify-text">
+                                    <p>You have Changed Your Password</p>
+                                    <span>Just Now</span>
+                                </div>
+                            </a>
+                            <a href="#" class="notify-item">
+                                <div class="notify-thumb"><i class="ti-key btn-danger"></i></div>
+
+                                <div class="notify-text">
+                                    <p>You have Changed Your Password</p>
+                                    <span>Just Now</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>--}%
+                </li>
+                <li class="dropdown">
+                    <i class="ti-email dropdown-toggle" data-toggle="dropdown"><span>3</span></i>
+
+                    %{--<div class="dropdown-menu notify-box nt-enveloper-box">
+                        <span class="notify-title">You have 3 new notifications <a href="#">view all</a></span>
+
+                        <div class="nofity-list">
+                            <a href="#" class="notify-item">
+                                <div class="notify-thumb">
+                                    <img src="assets/images/author/author-img1.jpg" alt="image">
+                                </div>
+
+                                <div class="notify-text">
+                                    <p>Aglae Mayer</p>
+                                    <span class="msg">Hey I am waiting for you...</span>
+                                    <span>3:15 PM</span>
+                                </div>
+                            </a>
+                            <a href="#" class="notify-item">
+                                <div class="notify-thumb">
+                                    <img src="assets/images/author/author-img2.jpg" alt="image">
+                                </div>
+
+                                <div class="notify-text">
+                                    <p>Aglae Mayer</p>
+                                    <span class="msg">When you can connect with me...</span>
+                                    <span>3:15 PM</span>
+                                </div>
+                            </a>
+                            <a href="#" class="notify-item">
+                                <div class="notify-thumb">
+                                    <img src="assets/images/author/author-img3.jpg" alt="image">
+                                </div>
+
+                                <div class="notify-text">
+                                    <p>Aglae Mayer</p>
+                                    <span class="msg">I missed you so much...</span>
+                                    <span>3:15 PM</span>
+                                </div>
+                            </a>
+                            <a href="#" class="notify-item">
+                                <div class="notify-thumb">
+                                    <img src="assets/images/author/author-img4.jpg" alt="image">
+                                </div>
+
+                                <div class="notify-text">
+                                    <p>Aglae Mayer</p>
+                                    <span class="msg">Your product is completely Ready...</span>
+                                    <span>3:15 PM</span>
+                                </div>
+                            </a>
+                            <a href="#" class="notify-item">
+                                <div class="notify-thumb">
+                                    <img src="assets/images/author/author-img2.jpg" alt="image">
+                                </div>
+
+                                <div class="notify-text">
+                                    <p>Aglae Mayer</p>
+                                    <span class="msg">Hey I am waiting for you...</span>
+                                    <span>3:15 PM</span>
+                                </div>
+                            </a>
+                            <a href="#" class="notify-item">
+                                <div class="notify-thumb">
+                                    <img src="assets/images/author/author-img1.jpg" alt="image">
+                                </div>
+
+                                <div class="notify-text">
+                                    <p>Aglae Mayer</p>
+                                    <span class="msg">Hey I am waiting for you...</span>
+                                    <span>3:15 PM</span>
+                                </div>
+                            </a>
+                            <a href="#" class="notify-item">
+                                <div class="notify-thumb">
+                                    <img src="assets/images/author/author-img3.jpg" alt="image">
+                                </div>
+
+                                <div class="notify-text">
+                                    <p>Aglae Mayer</p>
+                                    <span class="msg">Hey I am waiting for you...</span>
+                                    <span>3:15 PM</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>--}%
+                </li>
+                <li class="settings-btn">
+                    <i class="ti-settings"></i>
+                </li>
+            </ul>
+        </div>
     </div>
-</header>
+</div>
