@@ -14,22 +14,21 @@ import java.awt.image.BufferedImage
 class HomeController {
     def id = 0
 
-    def carService
+    CarService carService
 
     def springSecurityService
 
     @Secured("IS_AUTHENTICATED_FULLY")
     def index() {
         List<CarVO> carVOList = []
-        User user = springSecurityService.getCurrentUser()
+        User user = springSecurityService.getCurrentUser() as User
         if (SpringSecurityUtils.ifAllGranted(RoleConstant.ROLE_ADMIN)) {
             def c = Car.createCriteria()
             List<Car> carList = c.list(max: params.max ?: 5, offset: params.offset ?: 0) {} as List<Car>
             [carList: carList, carsCount: carList.totalCount, params: params]
         } else if (SpringSecurityUtils.ifAllGranted(RoleConstant.ROLE_SELLER)) {
-            carVOList = Car.findAllActiveCarBySeller(user).collect { new CarVO(it) }
-//            render(view: 'car', model: [carList: carVOList])
-            render(view: 'sellerIndex', model: [carList: carVOList])
+            carVOList = carService.fetchIncompleteCarList(user).collect { new CarVO(it) }
+            render(view: 'sellerIndex', model: [carList: carVOList, username: user.username])
         } else {
             carVOList = Car.findAllActiveCarList().collect { new CarVO(it) }
             render(view: 'buyerIndex', model: [carList: carVOList])

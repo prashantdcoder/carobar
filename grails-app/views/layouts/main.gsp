@@ -11,19 +11,19 @@
 
     <link rel="icon" href="/images/favicon.ico">
     <asset:javascript src="jquery-3.3.1.min.js"/>
-    <asset:stylesheet src="custom.css"/>
 
-    <asset:stylesheet src="bootstrap.min.css"/>
-    <asset:stylesheet src="font-awesome.min.css"/>
-    <asset:stylesheet src="themify-icons.css"/>
-    <asset:stylesheet src="metisMenu.css"/>
-    <asset:stylesheet src="owl.carousel.min.css"/>
-    <asset:stylesheet src="slicknav.min.css"/>
-    <asset:stylesheet src="typography.css"/>
-    <asset:stylesheet src="default-css.css"/>
-    <asset:stylesheet src="styles.css"/>
-    <asset:stylesheet src="responsive.css"/>
-    <asset:stylesheet src="themify.woff"/>
+    <asset:link rel="stylesheet" href="custom.css"/>
+    <asset:link rel="stylesheet" href="bootstrap.css"/>
+    <asset:link rel="stylesheet" href="font-awesome.min.css"/>
+    <asset:link rel="stylesheet" href="themify-icons.css"/>
+    <asset:link rel="stylesheet" href="metisMenu.css"/>
+    <asset:link rel="stylesheet" href="owl.carousel.min.css"/>
+    <asset:link rel="stylesheet" href="slicknav.min.css"/>
+    <asset:link rel="stylesheet" href="typography.css"/>
+    <asset:link rel="stylesheet" href="default-css.css"/>
+    <asset:link rel="stylesheet" href="styles.css"/>
+    <asset:link rel="stylesheet" href="responsive.css"/>
+    <asset:link rel="stylesheet" href="application.css"/>
     <g:layoutHead/>
 </head>
 
@@ -33,7 +33,7 @@
     <div class="wrap">
         <g:layoutBody/>
     </div>
-    <g:render template="/layouts/footer"/>
+    %{--<g:render template="/layouts/footer"/>--}%
 </div>
 </body>
 </html>
@@ -47,3 +47,4 @@
 <asset:javascript src="plugins.js"/>
 <asset:javascript src="scripts.js"/>
 <asset:javascript src="modernizr-2.8.3.min.js"/>
+<asset:javascript src="custom.js"/>
